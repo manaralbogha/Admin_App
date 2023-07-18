@@ -11,8 +11,12 @@ import 'package:project_one_admin_app/screens/register_doctor_screen/manager/reg
 class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
 //  GlobalKey<FormState> formKey = GlobalKey();
   RegisterDoctorModel registerModel = RegisterDoctorModel();
-  bool obscureText = true;
+
+  bool obscureText = false;
+
+ 
   DoctorModel? doctorModel;
+
   IconData icon = Icons.remove_red_eye;
   File? imageFile;
   final formKey = GlobalKey<FormState>();
