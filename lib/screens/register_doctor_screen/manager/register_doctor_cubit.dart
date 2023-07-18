@@ -62,31 +62,31 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     switch (index) {
       case 0:
         if (workTimes["Sunday"]['From'] == '' &&
-            workTimes["Sunday"]['To'] == '') return 'xxxx';
+            workTimes["Sunday"]['To'] == '') return 'not requeued';
         return workTimes["Sunday"][type];
       case 1:
         if (workTimes["Monday"]['From'] == '' &&
-            workTimes["Monday"]['To'] == '') return 'xxxx';
+            workTimes["Monday"]['To'] == '') return 'not requeued';
         return workTimes["Monday"][type];
       case 2:
         if (workTimes["Tuesday"]['From'] == '' &&
-            workTimes["Tuesday"]['To'] == '') return 'xxxx';
+            workTimes["Tuesday"]['To'] == '') return 'not requeued';
         return workTimes["Tuesday"][type];
       case 3:
         if (workTimes["Wednesday"]['From'] == '' &&
-            workTimes["Wednesday"]['To'] == '') return 'xxxx';
+            workTimes["Wednesday"]['To'] == '') return 'not requeued';
         return workTimes["Wednesday"][type];
       case 4:
         if (workTimes["Thursday"]['From'] == '' &&
-            workTimes["Thursday"]['To'] == '') return 'xxxx';
+            workTimes["Thursday"]['To'] == '') return 'not requeued';
         return workTimes["Thursday"][type];
       case 5:
         if (workTimes["Friday"]['From'] == '' &&
-            workTimes["Friday"]['To'] == '') return 'xxxx';
+            workTimes["Friday"]['To'] == '') return 'not requeued';
         return workTimes["Friday"][type];
       case 6:
         if (workTimes["Saturday"]['From'] == '' &&
-            workTimes["Saturday"]['To'] == '') return 'xxxx';
+            workTimes["Saturday"]['To'] == '') return 'not requeued';
         return workTimes["Saturday"][type];
     }
     return '';
