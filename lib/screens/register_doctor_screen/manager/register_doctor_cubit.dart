@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_one_admin_app/core/api/services/add_work_days_service.dart';
 import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
 import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
-
 import '../../../core/functions/custome_snack_bar.dart';
 
 class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
@@ -42,6 +42,8 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '09:00 PM',
   ];
 
+  List<WorkTime> timeModels = [];
+
   String? specialty;
   RegisterDoctorCubit() : super(RegisterDoctorInitial());
 
@@ -61,17 +63,17 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     'Saturday': {'From': '', 'To': ''},
   };
 
-  val({required context}) {
+  bool val(BuildContext context) {
     for (String key in workTimes.keys) {
       if (workTimes[key]['From'] != '' || workTimes[key]['To'] != '') {
-        return null;
+        return true;
       }
     }
     CustomeSnackBar.showSnackBar(context,
         msg: 'Pleas Inter At least One Time',
         duration: const Duration(milliseconds: 3000),
         color: Colors.red);
-    // return null;
+    return false;
   }
 
   String validatorHelper({
@@ -86,26 +88,9 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   void selectTime(
       {required String time, required int index, required String type}) {
     emit(RegisterDoctorInitial());
-
-    switch (index) {
-      case 0:
-        workTimes[days[index]][type] = time;
-      case 1:
-        workTimes["Monday"][type] = time;
-      case 2:
-        workTimes["Tuesday"][type] = time;
-      case 3:
-        workTimes["Wednesday"][type] = time;
-      case 4:
-        workTimes["Thursday"][type] = time;
-      case 5:
-        workTimes["Friday"][type] = time;
-      case 6:
-        workTimes["Saturday"][type] = time;
-    }
+    workTimes[days[index]][type] = time;
     log(workTimes.toString());
     log(index.toString());
-
     emit(SelectTimeState());
   }
 
@@ -135,5 +120,24 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
         emit(RegisterDoctorSuccess(loginModel: loginModel));
       },
     );
+  }
+
+  void storeTimes() {
+    timeModels.clear();
+    workTimes.forEach(
+      (key, value) {
+        if (value['From'] != '' && value['To'] != '') {
+          timeModels.add(
+            WorkTime(
+              day: key,
+              startTime: value['From'],
+              endTime: value['To'],
+            ),
+          );
+          log('${timeModels[timeModels.length - 1]}');
+        }
+      },
+    );
+    log('Time Models = ${timeModels.toString()}');
   }
 }
