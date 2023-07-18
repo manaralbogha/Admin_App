@@ -50,6 +50,9 @@ class AddWorkTimesViewBody extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -70,7 +73,7 @@ class AddWorkTimesViewBody extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15.w),
+                    SizedBox(height: 40.w),
                     Form(
                       key: cubit.formKey,
                       child: Column(
@@ -86,20 +89,6 @@ class AddWorkTimesViewBody extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // const SizedBox(height: 25),
-                    // const _SelectTimeItem(day: 'Sunday'),
-                    // const SizedBox(height: 10),
-                    // const _SelectTimeItem(day: 'Monday'),
-                    // const SizedBox(height: 10),
-                    // const _SelectTimeItem(day: 'Tuesday'),
-                    // const SizedBox(height: 10),
-                    // const _SelectTimeItem(day: 'Wednesday'),
-                    // const SizedBox(height: 10),
-                    // const _SelectTimeItem(day: 'Thursday'),
-                    // const SizedBox(height: 10),
-                    // const _SelectTimeItem(day: 'Friday'),
-                    // const SizedBox(height: 10),
-                    // const _SelectTimeItem(day: 'Saturday'),
                   ],
                 ),
               ),
@@ -108,8 +97,9 @@ class AddWorkTimesViewBody extends StatelessWidget {
             CustomeButton(
               text: 'Submit',
               onPressed: () {
+                cubit.val(context: context);
                 if (cubit.formKey.currentState!.validate()) {
-                  log(cubit.workTimes.toString());
+                  log('OK');
                 }
               },
             ),
@@ -188,26 +178,24 @@ class _CustomeTextFieldState extends State<_CustomeTextField> {
                         borderRadius: BorderRadius.circular(10)),
                     content: SizedBox(
                       height: screenSize.height * .75,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: GridView.count(
+                        padding: EdgeInsets.zero,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10.0,
+                        mainAxisSpacing: 10.0,
                         children: List.generate(
                           cubit.times.length,
-                          (index) => Column(
-                            children: [
-                              CustomeDialogs.timeDialogButton(context,
-                                  onTap: () {
-                                _hintText = cubit.times[index];
+                          (index) => CustomeDialogs.timeDialogButton(context,
+                              onTap: () {
+                            _hintText = cubit.times[index];
 
-                                cubit.selectTime(
-                                  time: cubit.times[index],
-                                  index: widget.indexR,
-                                  type: widget.type,
-                                );
-                                Navigator.pop(context);
-                              }, time: cubit.times[index]),
-                              const SizedBox(height: 5),
-                            ],
-                          ),
+                            cubit.selectTime(
+                              time: cubit.times[index],
+                              index: widget.indexR,
+                              type: widget.type,
+                            );
+                            Navigator.pop(context);
+                          }, time: cubit.times[index]),
                         ),
                       ),
                     ),
