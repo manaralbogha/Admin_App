@@ -69,8 +69,9 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     }
     CustomeSnackBar.showSnackBar(context,
         msg: 'Pleas Inter At least One Time',
-        duration: Duration(milliseconds: 3000),
+        duration: const Duration(milliseconds: 3000),
         color: Colors.red);
+    // return null;
   }
 
   String validatorHelper({
@@ -88,7 +89,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
 
     switch (index) {
       case 0:
-        workTimes["Sunday"][type] = time;
+        workTimes[days[index]][type] = time;
       case 1:
         workTimes["Monday"][type] = time;
       case 2:
@@ -136,5 +137,3 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     );
   }
 }
-
-class Context {}

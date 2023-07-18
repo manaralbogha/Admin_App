@@ -73,7 +73,7 @@ class AddWorkTimesViewBody extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 40.w),
+                    SizedBox(height: 20.w),
                     Form(
                       key: cubit.formKey,
                       child: Column(
@@ -176,27 +176,21 @@ class _CustomeTextFieldState extends State<_CustomeTextField> {
                   return AlertDialog(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    content: SizedBox(
-                      height: screenSize.height * .75,
-                      child: GridView.count(
-                        padding: EdgeInsets.zero,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10.0,
-                        mainAxisSpacing: 10.0,
-                        children: List.generate(
-                          cubit.times.length,
-                          (index) => CustomeDialogs.timeDialogButton(context,
-                              onTap: () {
-                            _hintText = cubit.times[index];
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(
+                        cubit.times.length,
+                        (index) =>
+                            CustomeDialogs.timeDialogButton(context, onTap: () {
+                          _hintText = cubit.times[index];
 
-                            cubit.selectTime(
-                              time: cubit.times[index],
-                              index: widget.indexR,
-                              type: widget.type,
-                            );
-                            Navigator.pop(context);
-                          }, time: cubit.times[index]),
-                        ),
+                          cubit.selectTime(
+                            time: cubit.times[index],
+                            index: widget.indexR,
+                            type: widget.type,
+                          );
+                          Navigator.pop(context);
+                        }, time: cubit.times[index]),
                       ),
                     ),
                   );

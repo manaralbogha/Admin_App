@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_one_admin_app/core/functions/custome_dialogs.dart';
 import 'package:project_one_admin_app/core/styles/colors/colors.dart';
 import 'package:project_one_admin_app/core/styles/text_styles.dart';
@@ -70,7 +71,10 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     Text(
                       'Create Doctor Account',
                       style: TextStyles.textStyle30.copyWith(
-                          letterSpacing: 1, fontWeight: FontWeight.w500),
+                        letterSpacing: 1,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 27.sp,
+                      ),
                     ),
                     SizedBox(height: screenSize.height * .05),
                     CustomeTextField(
@@ -206,16 +210,16 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     CustomeButton(
                       text: 'Next',
                       onPressed: () {
-                        if (cubit.formKey.currentState!.validate()) {
-                          cubit.registerDoctor(token: token);
-                        }
+                        // if (cubit.formKey.currentState!.validate()) {
+                        //   cubit.registerDoctor(token: token);
+                        // }
 
-                        log('\nDoctor Imagggggge \n ${cubit.imageFile}');
+                        // log('\nDoctor Imagggggge \n ${cubit.imageFile}');
 
-                        // Navigator.pushNamed(
-                        //   context,
-                        //   AddWorkTimesView.route,
-                        // );
+                        Navigator.pushNamed(
+                          context,
+                          AddWorkTimesView.route,
+                        );
                       },
                     ),
                     const SizedBox(height: 15),
