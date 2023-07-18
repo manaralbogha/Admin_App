@@ -108,6 +108,7 @@ abstract class CustomeDialogs {
       borderRadius: BorderRadius.circular(10.r),
       onTap: onTap,
       child: Container(
+        margin: const EdgeInsets.only(bottom: 5),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.circular(10),
