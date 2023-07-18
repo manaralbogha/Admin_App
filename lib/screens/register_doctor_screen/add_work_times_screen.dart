@@ -97,9 +97,11 @@ class AddWorkTimesViewBody extends StatelessWidget {
             CustomeButton(
               text: 'Submit',
               onPressed: () {
-                cubit.val(context: context);
-                if (cubit.formKey.currentState!.validate()) {
-                  log('OK');
+                if (cubit.val(context)) {
+                  if (cubit.formKey.currentState!.validate()) {
+                    log('OK');
+                    cubit.storeTimes();
+                  }
                 }
               },
             ),
