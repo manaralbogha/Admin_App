@@ -70,12 +70,12 @@ class LoginViewBody extends StatelessWidget {
               height: screenSize.height * .3,
             ),
             SizedBox(height: screenSize.height * .02),
-            const Text(
+            Text(
               'Login',
               style: TextStyles.textStyle50,
             ),
             SizedBox(height: screenSize.height * .02),
-            const Text(
+            Text(
               'Please Enter Your Credentials To Get Started ...',
               style: TextStyles.textStyle18,
               maxLines: 2,
