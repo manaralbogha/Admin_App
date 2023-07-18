@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,6 +96,16 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     SizedBox(height: screenSize.height * .02),
                     CustomeTextField(
                       hintText: 'Password ...',
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'required';
+                        } else {
+                          if (value!.length < 6) {
+                            return 'password must be at least 6 characters';
+                          }
+                        }
+                        return null;
+                      },
                       iconData: Icons.lock,
                       onChanged: (value) =>
                           cubit.registerModel.password = value,
@@ -195,16 +207,11 @@ class RegisterDoctorViewBody extends StatelessWidget {
                       text: 'Next',
                       onPressed: () {
                         if (cubit.formKey.currentState!.validate()) {
-                          cubit.registerDoctor(token: token).then(
-                            (value) {
-                              Navigator.pushNamed(
-                                context,
-                                AddWorkTimesView.route,
-                              );
-                            },
-                          );
-                          //log('\nDoctor Imagggggge \n ${cubit.imageFile}');
+                          cubit.registerDoctor(token: token);
                         }
+
+                        log('\nDoctor Imagggggge \n ${cubit.imageFile}');
+
                         // Navigator.pushNamed(
                         //   context,
                         //   AddWorkTimesView.route,

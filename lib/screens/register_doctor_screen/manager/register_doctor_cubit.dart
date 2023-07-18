@@ -4,19 +4,15 @@ import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
-import 'package:project_one_admin_app/core/models/doctor_model.dart';
 import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
 
 import '../../../core/functions/custome_snack_bar.dart';
 
 class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
-//  GlobalKey<FormState> formKey = GlobalKey();
   RegisterDoctorModel registerModel = RegisterDoctorModel();
 
-  bool obscureText = false;
-
-  DoctorModel? doctorModel;
+  bool obscureText = true;
 
   IconData icon = Icons.remove_red_eye;
   File? imageFile;
@@ -124,6 +120,9 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   }
 
   Future<void> registerDoctor({required String token}) async {
+    if (imageFile != null) {
+      registerModel.image = imageFile;
+    }
     emit(RegisterDoctorLoading());
     (await RegisterDoctorService.registerDoctor(
             token: token, registerModel: registerModel))
