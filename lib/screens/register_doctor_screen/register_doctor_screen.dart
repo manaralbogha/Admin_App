@@ -11,7 +11,6 @@ import 'package:project_one_admin_app/core/widgets/custome_error_widget.dart';
 import 'package:project_one_admin_app/core/widgets/custome_progress_indicator.dart';
 import 'package:project_one_admin_app/core/widgets/custome_text_field.dart';
 import 'package:project_one_admin_app/main.dart';
-import 'package:project_one_admin_app/screens/doctor_details_screen/doctor_details_screen.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/add_work_times_screen.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_cubit.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
@@ -97,6 +96,16 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     SizedBox(height: screenSize.height * .02),
                     CustomeTextField(
                       hintText: 'Password ...',
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'required';
+                        } else {
+                          if (value!.length < 6) {
+                            return 'password must be at least 6 characters';
+                          }
+                        }
+                        return null;
+                      },
                       iconData: Icons.lock,
                       onChanged: (value) =>
                           cubit.registerModel.password = value,
@@ -198,16 +207,9 @@ class RegisterDoctorViewBody extends StatelessWidget {
                       text: 'Next',
                       onPressed: () {
                         if (cubit.formKey.currentState!.validate()) {
-                          cubit.registerDoctor(token: token).then(
-                            (value) {
-                              Navigator.pushNamed(
-                                context,
-                                AddWorkTimesView.route,
-                              );
-                            },
-                          );
-                          //log('\nDoctor Imagggggge \n ${cubit.imageFile}');
+                          cubit.registerDoctor(token: token);
                         }
+                        log('\nDoctor Imagggggge \n ${cubit.imageFile}');
                       },
                     ),
                     const SizedBox(height: 15),

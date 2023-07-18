@@ -2,9 +2,12 @@
 
 import 'dart:developer';
 import 'dart:io';
+import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_one_admin_app/core/styles/colors/colors.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/widgets/custome_image.dart';
 import '../../../main.dart';
@@ -22,42 +25,41 @@ class _PickImageWidgetState extends State<PickImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _showBottomSheet(context);
-      },
-      child: _image == null
-          ? Stack(
-              children: [
-                CustomeImage(
-                  image: AppAssets.registerDoctorImage,
-                  width: screenSize.width * .51,
-                  borderRadius: BorderRadius.circular(screenSize.width * .5),
+    return Stack(
+      children: [
+        _image == null
+            ? CustomeImage(
+                image: AppAssets.registerDoctorImage,
+                width: screenSize.width * .51,
+                borderRadius: BorderRadius.circular(screenSize.width * .5),
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(screenSize.height * .2),
+                child: Image.file(
+                  File(_image!),
+                  width: screenSize.height * .2,
+                  height: screenSize.height * .2,
+                  fit: BoxFit.cover,
                 ),
-                Positioned(
-                  right: screenSize.width * .03,
-                  bottom: screenSize.width * .01,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(.1),
-                    radius: screenSize.width * .25,
-                    child: Icon(
-                      Icons.add,
-                      size: screenSize.width * .55,
-                      color: Colors.grey.withOpacity(.6),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(screenSize.height * .2),
-              child: Image.file(
-                File(_image!),
-                width: screenSize.height * .2,
-                height: screenSize.height * .2,
-                fit: BoxFit.cover,
               ),
+        Positioned(
+          right: screenSize.width * .001,
+          bottom: screenSize.width * .01,
+          child: MaterialButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              _showBottomSheet(context);
+            },
+            shape: const CircleBorder(),
+            color: defaultColor,
+            child: Icon(
+              _image == null ? Icons.add_a_photo : Icons.edit,
+              size: 20.w,
+              color: Colors.white,
             ),
+          ),
+        ),
+      ],
     );
   }
 
