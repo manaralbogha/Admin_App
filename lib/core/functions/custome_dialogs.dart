@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_one_admin_app/core/styles/text_styles.dart';
 import 'package:project_one_admin_app/main.dart';
 
@@ -104,7 +105,7 @@ abstract class CustomeDialogs {
     // required String value,
   }) {
     return InkWell(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(10.r),
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
@@ -113,9 +114,11 @@ abstract class CustomeDialogs {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            time,
-            style: TextStyles.textStyle20,
+          child: Center(
+            child: Text(
+              time,
+              style: TextStyles.textStyle20,
+            ),
           ),
         ),
       ),

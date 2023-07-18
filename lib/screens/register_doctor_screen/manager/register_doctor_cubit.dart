@@ -7,9 +7,13 @@ import 'package:project_one_admin_app/core/api/services/register_doctor_service.
 import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
 
+import '../../../core/functions/custome_snack_bar.dart';
+
 class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   RegisterDoctorModel registerModel = RegisterDoctorModel();
+
   bool obscureText = true;
+
   IconData icon = Icons.remove_red_eye;
   File? imageFile;
   final formKey = GlobalKey<FormState>();
@@ -57,41 +61,27 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     'Saturday': {'From': '', 'To': ''},
   };
 
-  String validatorHelper({required int index, required String type}) {
-    switch (index) {
-      case 0:
-        if (workTimes["Sunday"]['From'] == '' &&
-            workTimes["Sunday"]['To'] == '') return 'not requeued';
-        return workTimes["Sunday"][type];
-      case 1:
-        if (workTimes["Monday"]['From'] == '' &&
-            workTimes["Monday"]['To'] == '') return 'not requeued';
-        return workTimes["Monday"][type];
-      case 2:
-        if (workTimes["Tuesday"]['From'] == '' &&
-            workTimes["Tuesday"]['To'] == '') return 'not requeued';
-        return workTimes["Tuesday"][type];
-      case 3:
-        if (workTimes["Wednesday"]['From'] == '' &&
-            workTimes["Wednesday"]['To'] == '') return 'not requeued';
-        return workTimes["Wednesday"][type];
-      case 4:
-        if (workTimes["Thursday"]['From'] == '' &&
-            workTimes["Thursday"]['To'] == '') return 'not requeued';
-        return workTimes["Thursday"][type];
-      case 5:
-        if (workTimes["Friday"]['From'] == '' &&
-            workTimes["Friday"]['To'] == '') return 'not requeued';
-        return workTimes["Friday"][type];
-      case 6:
-        if (workTimes["Saturday"]['From'] == '' &&
-            workTimes["Saturday"]['To'] == '') return 'not requeued';
-        return workTimes["Saturday"][type];
+  val({required context}) {
+    for (String key in workTimes.keys) {
+      if (workTimes[key]['From'] != '' || workTimes[key]['To'] != '') {
+        return null;
+      }
     }
-    return '';
+    CustomeSnackBar.showSnackBar(context,
+        msg: 'Pleas Inter At least One Time',
+        duration: Duration(milliseconds: 3000),
+        color: Colors.red);
   }
 
-  // List<WorkTime> workTimes = [];
+  String validatorHelper({
+    required int index,
+    required String type,
+  }) {
+    if (workTimes[days[index]]['From'] == '' &&
+        workTimes[days[index]]['To'] == '') return 'not requeued';
+    return workTimes[days[index]][type];
+  }
+
   void selectTime(
       {required String time, required int index, required String type}) {
     emit(RegisterDoctorInitial());
@@ -146,3 +136,5 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     );
   }
 }
+
+class Context {}

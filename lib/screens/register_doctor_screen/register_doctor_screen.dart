@@ -209,7 +209,13 @@ class RegisterDoctorViewBody extends StatelessWidget {
                         if (cubit.formKey.currentState!.validate()) {
                           cubit.registerDoctor(token: token);
                         }
+
                         log('\nDoctor Imagggggge \n ${cubit.imageFile}');
+
+                        // Navigator.pushNamed(
+                        //   context,
+                        //   AddWorkTimesView.route,
+                        // );
                       },
                     ),
                     const SizedBox(height: 15),
