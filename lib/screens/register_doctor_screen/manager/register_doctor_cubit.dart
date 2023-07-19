@@ -42,6 +42,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '08:00 PM',
     '09:00 PM',
   ];
+
   List<String> nextTimes = [
     '10:00 AM',
     '11:00 AM',
@@ -57,6 +58,11 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '09:00 PM',
   ];
   List<WorkTime> timeModels = [];
+
+
+
+
+
   String? specialty;
   RegisterDoctorCubit() : super(RegisterDoctorInitial());
 
@@ -98,6 +104,18 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     return workTimes[days[index]][type];
   }
 
+
+
+  void selectTime(
+      {required String time, required int index, required String type}) {
+    emit(RegisterDoctorInitial());
+    workTimes[days[index]][type] = time;
+    log(workTimes.toString());
+    log(index.toString());
+    emit(SelectTimeState());
+  }
+
+
   void changePasswordState() {
     emit(RegisterDoctorInitial());
     obscureText = !obscureText;
@@ -138,19 +156,15 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
               endTime: value['To'],
             ),
           );
+
         }
       },
     );
     log('Time Models = ${timeModels.toString()}');
   }
 
-  void selectTime(
-      {required String time, required int index, required String type}) {
-    emit(RegisterDoctorInitial());
-    workTimes[days[index]][type] = time;
-    log(workTimes.toString());
-    emit(SelectTimeState());
-  }
+
+
 
   int nextTimesIndex = 0;
   bool allTimes = false;
@@ -169,4 +183,5 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     }
     // allTimes = !allTimes;
   }
+
 }
