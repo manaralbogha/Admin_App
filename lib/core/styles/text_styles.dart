@@ -16,7 +16,7 @@ abstract class TextStyles {
       TextStyle(color: defaultColor, fontSize: 25.sp);
 
   static TextStyle textStyle30 =
-      TextStyle(color: defaultColor, fontSize: 27.sp);
+      TextStyle(color: defaultColor, fontSize: 30.sp);
 
   static TextStyle textStyle50 =
       TextStyle(color: defaultColor, fontSize: 50.sp);

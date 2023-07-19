@@ -83,7 +83,9 @@ class AddWorkTimesViewBody extends StatelessWidget {
                             children: [
                               const SizedBox(height: 10),
                               _SelectTimeItem(
-                                  day: cubit.days[index], indexR: index),
+                                day: cubit.days[index],
+                                indexR: index,
+                              ),
                             ],
                           ),
                         ),
@@ -99,10 +101,10 @@ class AddWorkTimesViewBody extends StatelessWidget {
               onPressed: () {
                 if (cubit.val(context)) {
                   if (cubit.formKey.currentState!.validate()) {
-                    log('OK');
                     cubit.storeTimes();
                   }
                 }
+                log('xxxxxxx ${cubit.nextTimesIndex} xxxxxxx');
               },
             ),
           ],
@@ -126,7 +128,7 @@ class _SelectTimeItem extends StatelessWidget {
           width: screenSize.width * .3,
           child: Text(
             day,
-            style: TextStyles.textStyle25,
+            style: TextStyles.textStyle25.copyWith(fontSize: 19.sp),
             maxLines: 1,
           ),
         ),
@@ -163,7 +165,6 @@ class _CustomeTextFieldState extends State<_CustomeTextField> {
                   index: widget.indexR,
                   type: widget.type,
                 );
-                // log(s);
                 if (s.isEmpty) {
                   return 'required';
                 }
@@ -181,29 +182,49 @@ class _CustomeTextFieldState extends State<_CustomeTextField> {
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: List.generate(
-                        cubit.times.length,
-                        (index) =>
-                            CustomeDialogs.timeDialogButton(context, onTap: () {
-                          _hintText = cubit.times[index];
+                        widget.type == 'From'
+                            ? cubit.times.length
+                            : cubit.nextTimes.length,
+                        (index) => CustomeDialogs.timeDialogButton(
+                          context,
+                          time: widget.type == 'From'
+                              ? cubit.times[index]
+                              : cubit.nextTimes[index],
+                          onTap: () {
+                            if (widget.type == 'From') {
+                              cubit.nextTimesIndex = index;
+                            }
+                            // cubit.setNextTimes();
+                            if (widget.type == 'From') {
+                              _hintText = cubit.times[index];
+                            } else {
+                              _hintText = cubit.nextTimes[index];
+                            }
 
-                          cubit.selectTime(
-                            time: cubit.times[index],
-                            index: widget.indexR,
-                            type: widget.type,
-                          );
-                          Navigator.pop(context);
-                        }, time: cubit.times[index]),
+                            cubit.selectTime(
+                              time: widget.type == 'From'
+                                  ? cubit.times[index]
+                                  : cubit.nextTimes[index],
+                              index: widget.indexR,
+                              type: widget.type,
+                            );
+                            cubit.setNextTimes();
+                            // if (widget.type == 'To') {
+                            cubit.allTimes = !cubit.allTimes;
+                            // }
+                            Navigator.pop(context);
+                            log('Next Times Length = ${cubit.nextTimes.length}');
+                          },
+                        ),
                       ),
                     ),
                   );
                 },
               );
-
-              // CustomeDialogs.showTimesDialog(context);
             },
             decoration: InputDecoration(
               hintText: _hintText ?? '__',
-              hintStyle: TextStyle(fontSize: 11.w),
+              hintStyle: TextStyle(fontSize: 11.w, fontWeight: FontWeight.w500),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
               suffixIcon: const Icon(
