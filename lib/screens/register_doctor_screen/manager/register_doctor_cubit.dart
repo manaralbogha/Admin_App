@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_one_admin_app/core/api/services/add_work_days_service.dart';
 import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
 import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
+import 'package:project_one_admin_app/core/styles/colors/colors.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
 import '../../../core/functions/custome_snack_bar.dart';
 
@@ -42,7 +43,25 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '09:00 PM',
   ];
 
+  List<String> nextTimes = [
+    '10:00 AM',
+    '11:00 AM',
+    '12:00 PM',
+    '01:00 PM',
+    '02:00 PM',
+    '03:00 PM',
+    '04:00 PM',
+    '05:00 PM',
+    '06:00 PM',
+    '07:00 PM',
+    '08:00 PM',
+    '09:00 PM',
+  ];
   List<WorkTime> timeModels = [];
+
+
+
+
 
   String? specialty;
   RegisterDoctorCubit() : super(RegisterDoctorInitial());
@@ -70,7 +89,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
       }
     }
     CustomeSnackBar.showSnackBar(context,
-        msg: 'Pleas Inter At least One Time',
+        msg: 'Please enter at least one time',
         duration: const Duration(milliseconds: 3000),
         color: Colors.red);
     return false;
@@ -85,6 +104,8 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     return workTimes[days[index]][type];
   }
 
+
+
   void selectTime(
       {required String time, required int index, required String type}) {
     emit(RegisterDoctorInitial());
@@ -93,6 +114,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     log(index.toString());
     emit(SelectTimeState());
   }
+
 
   void changePasswordState() {
     emit(RegisterDoctorInitial());
@@ -134,10 +156,32 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
               endTime: value['To'],
             ),
           );
-          log('${timeModels[timeModels.length - 1]}');
+
         }
       },
     );
     log('Time Models = ${timeModels.toString()}');
   }
+
+
+
+
+  int nextTimesIndex = 0;
+  bool allTimes = false;
+  void setNextTimes() {
+    nextTimes.clear();
+    if (!allTimes) {
+      // if (nextTimesIndex != 0) {
+      for (int i = nextTimesIndex + 1; i < times.length; i++) {
+        nextTimes.add(times[i]);
+      }
+      // }
+    } else {
+      for (String item in times) {
+        nextTimes.add(item);
+      }
+    }
+    // allTimes = !allTimes;
+  }
+
 }
