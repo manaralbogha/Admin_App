@@ -4,9 +4,9 @@ import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_one_admin_app/core/api/services/add_work_days_service.dart';
+import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
 import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
 import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
-import 'package:project_one_admin_app/core/styles/colors/colors.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
 import '../../../core/functions/custome_snack_bar.dart';
 
@@ -14,7 +14,6 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   RegisterDoctorModel registerModel = RegisterDoctorModel();
 
   bool obscureText = true;
-
   IconData icon = Icons.remove_red_eye;
   File? imageFile;
   final formKey = GlobalKey<FormState>();
@@ -57,12 +56,17 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '08:00 PM',
     '09:00 PM',
   ];
+<<<<<<< HEAD
+  // List<WorkTime> timeModels = [];
+  List<Map<String, String>> timeModels = [];
+=======
   List<WorkTime> timeModels = [];
 
 
 
 
 
+>>>>>>> b990522e4f5136ef3ae26554c736e39124cf439a
   String? specialty;
   RegisterDoctorCubit() : super(RegisterDoctorInitial());
 
@@ -144,11 +148,36 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     );
   }
 
+  // void storeTimes() {
+  //   timeModels.clear();
+  //   workTimes.forEach(
+  //     (key, value) {
+  //       if (value['From'] != '' && value['To'] != '') {
+  //         timeModels.add(
+  //           WorkTime(
+  //             day: key,
+  //             startTime: value['From'],
+  //             endTime: value['To'],
+  //           ),
+  //         );
+  //       }
+  //     },
+  //   );
+  //   log('Time Models = ${timeModels.toString()}');
+  // }
+
   void storeTimes() {
     timeModels.clear();
     workTimes.forEach(
       (key, value) {
         if (value['From'] != '' && value['To'] != '') {
+<<<<<<< HEAD
+          timeModels.add({
+            '"day"': '"$key"',
+            '"start_time"': '"${value['From']}"',
+            '"end_time"': '"${value['To']}"',
+          });
+=======
           timeModels.add(
             WorkTime(
               day: key,
@@ -157,6 +186,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
             ),
           );
 
+>>>>>>> b990522e4f5136ef3ae26554c736e39124cf439a
         }
       },
     );
@@ -184,4 +214,23 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     // allTimes = !allTimes;
   }
 
+<<<<<<< HEAD
+  Future<void> setWorkTimes() async {
+    emit(AddWorkTimesLoading());
+    (await AddWorkDaysService.addWorkDays(
+      token: CacheHelper.getData(key: 'Token'),
+      userID: '9',
+      times: timeModels,
+    ))
+        .fold(
+      (failure) {
+        emit(AddWorkTimesFailure(failureMsg: failure.errorMessege));
+      },
+      (workTimes) {
+        emit(AddWorkTimesSuccess(workTimes: workTimes));
+      },
+    );
+  }
+=======
+>>>>>>> b990522e4f5136ef3ae26554c736e39124cf439a
 }
