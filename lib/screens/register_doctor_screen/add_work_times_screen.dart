@@ -111,17 +111,16 @@ class AddWorkTimesViewBody extends StatelessWidget {
               ),
               SizedBox(height: screenSize.height * .03),
               CustomeButton(
-                text: 'Submit',
-                onPressed: () {
-                  if (cubit.val(context)) {
-                    if (cubit.formKey.currentState!.validate()) {
-                      cubit.storeTimes();
-                      cubit.setWorkTimes();
+                  text: 'Submit',
+                  onPressed: () {
+                    if (cubit.val(context)) {
+                      if (cubit.formKey.currentState!.validate()) {
+                        cubit.storeTimes();
+                        cubit.setWorkTimes();
+                      }
                     }
-                  }
-                  log('xxxxxxx ${cubit.nextTimesIndex} xxxxxxx');
-                },
-              ),
+                  }),
+              SizedBox(height: screenSize.height * .03),
             ],
           );
         }
