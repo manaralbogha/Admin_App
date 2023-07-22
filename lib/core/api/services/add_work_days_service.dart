@@ -3,26 +3,29 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:project_one_admin_app/core/api/http_api_services.dart';
 import '../../errors/failures.dart';
-import '../../models/message_model.dart';
 
 abstract class AddWorkDaysService {
-  static Future<Either<Failure, MessageModel>> addWorkDays({
+  static Future<Either<Failure, List<WorkTime>>> addWorkDays({
     required String token,
-    required WorkTime workTime,
+    required String userID,
+    required List<Map<String, String>> times,
   }) async {
     try {
+      List<WorkTime> workTimes = [];
       var data = await ApiServices.post(
         endPoint: 'storeWorkDay',
         body: {
-          'day': workTime.day,
-          'start_time': workTime.startTime,
-          'end_time': workTime.endTime,
-          'user_id': workTime.userID,
+          'user_id': userID,
+          'workDay': times,
         },
         token: token,
       );
 
-      return right(MessageModel.fromJson(data));
+      for (var item in data['data']) {
+        workTimes.add(WorkTime.fromJson(item));
+      }
+
+      return right(workTimes);
     } catch (ex) {
       log('Exception: there is an error in addWorkDays method');
       if (ex is DioException) {
@@ -34,15 +37,27 @@ abstract class AddWorkDaysService {
 }
 
 class WorkTime {
-  final String? day;
-  final String? startTime;
-  final String? endTime;
-  final int? userID;
+  final int id;
+  final String day;
+  final String startTime;
+  final String endTime;
+  final int userID;
 
   WorkTime({
-    this.day,
-    this.startTime,
-    this.endTime,
-    this.userID,
+    required this.id,
+    required this.day,
+    required this.startTime,
+    required this.endTime,
+    required this.userID,
   });
+
+  factory WorkTime.fromJson(Map<String, dynamic> jsonData) {
+    return WorkTime(
+      id: jsonData['id'],
+      day: jsonData['day'],
+      startTime: jsonData['start_time'],
+      endTime: jsonData['end_time'],
+      userID: jsonData['doctor_id'],
+    );
+  }
 }

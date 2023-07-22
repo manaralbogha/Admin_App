@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:project_one_admin_app/core/api/services/add_work_days_service.dart';
 import 'package:project_one_admin_app/core/api/services/login_service.dart';
 
 abstract class RegisterDoctorStates extends Equatable {
@@ -27,3 +28,17 @@ class AddSpecialtyState extends RegisterDoctorStates {}
 class SelectTimeState extends RegisterDoctorStates {}
 
 class ChangePasswordState extends RegisterDoctorStates {}
+
+class AddWorkTimesLoading extends RegisterDoctorStates {}
+
+class AddWorkTimesSuccess extends RegisterDoctorStates {
+  final List<WorkTime> workTimes;
+
+  AddWorkTimesSuccess({required this.workTimes});
+}
+
+class AddWorkTimesFailure extends RegisterDoctorStates {
+  final String failureMsg;
+
+  AddWorkTimesFailure({required this.failureMsg});
+}

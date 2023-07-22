@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_one_admin_app/core/functions/custome_dialogs.dart';
 import 'package:project_one_admin_app/core/styles/text_styles.dart';
 import 'package:project_one_admin_app/core/widgets/custome_button.dart';
+import 'package:project_one_admin_app/core/widgets/custome_error_widget.dart';
+import 'package:project_one_admin_app/core/widgets/custome_progress_indicator.dart';
 import 'package:project_one_admin_app/core/widgets/custome_text_field.dart';
 import 'package:project_one_admin_app/main.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_cubit.dart';
@@ -36,79 +38,93 @@ class AddWorkTimesViewBody extends StatelessWidget {
     RegisterDoctorCubit cubit = BlocProvider.of(context);
     return BlocBuilder<RegisterDoctorCubit, RegisterDoctorStates>(
       builder: (context, state) {
-        return Column(
-          children: [
-            SizedBox(height: screenSize.height * .03),
-            Container(
-              height: screenSize.height * .75,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          'Days',
-                          style: TextStyles.textStyle25
-                              .copyWith(color: Colors.grey),
-                        ),
-                        Text(
-                          'From',
-                          style: TextStyles.textStyle25
-                              .copyWith(color: Colors.grey),
-                        ),
-                        Text(
-                          'To',
-                          style: TextStyles.textStyle25
-                              .copyWith(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.w),
-                    Form(
-                      key: cubit.formKey,
-                      child: Column(
-                        children: List.generate(
-                          cubit.days.length,
-                          (index) => Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              _SelectTimeItem(
-                                day: cubit.days[index],
-                                indexR: index,
-                              ),
-                            ],
+        if (state is AddWorkTimesLoading) {
+          return const CustomeProgressIndicator();
+        } else if (state is AddWorkTimesFailure) {
+          return CustomeErrorWidget(errorMsg: state.failureMsg);
+        } else if (state is AddWorkTimesSuccess) {
+          return ListView.builder(
+            itemBuilder: (context, index) => Text(
+              '${state.workTimes[index].day}  ${state.workTimes[index].startTime}  ${state.workTimes[index].endTime}',
+            ),
+            itemCount: state.workTimes.length,
+          );
+        } else {
+          return Column(
+            children: [
+              SizedBox(height: screenSize.height * .03),
+              Container(
+                height: screenSize.height * .75,
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            'Days',
+                            style: TextStyles.textStyle25
+                                .copyWith(color: Colors.grey),
+                          ),
+                          Text(
+                            'From',
+                            style: TextStyles.textStyle25
+                                .copyWith(color: Colors.grey),
+                          ),
+                          Text(
+                            'To',
+                            style: TextStyles.textStyle25
+                                .copyWith(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.w),
+                      Form(
+                        key: cubit.formKey,
+                        child: Column(
+                          children: List.generate(
+                            cubit.days.length,
+                            (index) => Column(
+                              children: [
+                                const SizedBox(height: 10),
+                                _SelectTimeItem(
+                                  day: cubit.days[index],
+                                  indexR: index,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: screenSize.height * .03),
-            CustomeButton(
-              text: 'Submit',
-              onPressed: () {
-                if (cubit.val(context)) {
-                  if (cubit.formKey.currentState!.validate()) {
-                    cubit.storeTimes();
+              SizedBox(height: screenSize.height * .03),
+              CustomeButton(
+                text: 'Submit',
+                onPressed: () {
+                  if (cubit.val(context)) {
+                    if (cubit.formKey.currentState!.validate()) {
+                      cubit.storeTimes();
+                      cubit.setWorkTimes();
+                    }
                   }
-                }
-                log('xxxxxxx ${cubit.nextTimesIndex} xxxxxxx');
-              },
-            ),
-          ],
-        );
+                  log('xxxxxxx ${cubit.nextTimesIndex} xxxxxxx');
+                },
+              ),
+            ],
+          );
+        }
       },
     );
   }
