@@ -41,7 +41,6 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '08:00 PM',
     '09:00 PM',
   ];
-
   List<String> nextTimes = [
     '10:00 AM',
     '11:00 AM',
@@ -56,18 +55,10 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '08:00 PM',
     '09:00 PM',
   ];
-<<<<<<< HEAD
   // List<WorkTime> timeModels = [];
   List<Map<String, String>> timeModels = [];
-=======
-  List<WorkTime> timeModels = [];
-
-
-
-
-
->>>>>>> b990522e4f5136ef3ae26554c736e39124cf439a
   String? specialty;
+
   RegisterDoctorCubit() : super(RegisterDoctorInitial());
 
   void selectSpecialty({required String specialty}) {
@@ -108,8 +99,6 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     return workTimes[days[index]][type];
   }
 
-
-
   void selectTime(
       {required String time, required int index, required String type}) {
     emit(RegisterDoctorInitial());
@@ -118,7 +107,6 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     log(index.toString());
     emit(SelectTimeState());
   }
-
 
   void changePasswordState() {
     emit(RegisterDoctorInitial());
@@ -171,30 +159,16 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     workTimes.forEach(
       (key, value) {
         if (value['From'] != '' && value['To'] != '') {
-<<<<<<< HEAD
           timeModels.add({
             '"day"': '"$key"',
             '"start_time"': '"${value['From']}"',
             '"end_time"': '"${value['To']}"',
           });
-=======
-          timeModels.add(
-            WorkTime(
-              day: key,
-              startTime: value['From'],
-              endTime: value['To'],
-            ),
-          );
-
->>>>>>> b990522e4f5136ef3ae26554c736e39124cf439a
         }
       },
     );
     log('Time Models = ${timeModels.toString()}');
   }
-
-
-
 
   int nextTimesIndex = 0;
   bool allTimes = false;
@@ -214,7 +188,6 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     // allTimes = !allTimes;
   }
 
-<<<<<<< HEAD
   Future<void> setWorkTimes() async {
     emit(AddWorkTimesLoading());
     (await AddWorkDaysService.addWorkDays(
@@ -231,6 +204,4 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
       },
     );
   }
-=======
->>>>>>> b990522e4f5136ef3ae26554c736e39124cf439a
 }
