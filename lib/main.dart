@@ -4,7 +4,6 @@ import 'package:project_one_admin_app/core/styles/colors/colors.dart';
 import 'package:project_one_admin_app/screens/doctor_details_screen/doctor_details_screen.dart';
 import 'package:project_one_admin_app/screens/doctors_screen/doctors_screen.dart';
 import 'package:project_one_admin_app/screens/login_screen/login_screen.dart';
-import 'package:project_one_admin_app/screens/register_doctor_screen/add_work_times_screen.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/register_doctor_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -32,7 +31,7 @@ class AdminApp extends StatelessWidget {
             LoginView.route: (context) => const LoginView(),
             DoctorDetailsView.route: (context) => const DoctorDetailsView(),
             RegisterDoctorView.route: (context) => const RegisterDoctorView(),
-            AddWorkTimesView.route: (context) => const AddWorkTimesView(),
+            // AddWorkTimesView.route: (context) => const AddWorkTimesView(),
             DoctorsView.route: (context) =>
                 DoctorsView(token: CacheHelper.getData(key: 'Token')),
           },

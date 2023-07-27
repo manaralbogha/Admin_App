@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,7 +52,8 @@ class RegisterDoctorViewBody extends StatelessWidget {
         } else if (state is RegisterDoctorFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is RegisterDoctorSuccess) {
-          return const AddWorkTimesView();
+          return AddWorkTimesView(
+              registerDoctorResponse: state.registerResponse);
         } else {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -208,16 +211,16 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     CustomeButton(
                       text: 'Next',
                       onPressed: () {
-                        // if (cubit.formKey.currentState!.validate()) {
-                        //   cubit.registerDoctor(token: token);
-                        // }
+                        if (cubit.formKey.currentState!.validate()) {
+                          cubit.registerDoctor(token: token);
+                        }
 
-                        // log('\nDoctor Imagggggge \n ${cubit.imageFile}');
+                        log('\nDoctor Imagggggge \n ${cubit.imageFile}');
 
-                        Navigator.pushNamed(
-                          context,
-                          AddWorkTimesView.route,
-                        );
+                        // Navigator.pushNamed(
+                        //   context,
+                        //   AddWorkTimesView.route,
+                        // );
                       },
                     ),
                     const SizedBox(height: 15),

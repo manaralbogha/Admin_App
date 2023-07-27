@@ -55,8 +55,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '08:00 PM',
     '09:00 PM',
   ];
-  // List<WorkTime> timeModels = [];
-  List<Map<String, String>> timeModels = [];
+  List<dynamic> timeModels = [];
   String? specialty;
 
   RegisterDoctorCubit() : super(RegisterDoctorInitial());
@@ -67,7 +66,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     emit(AddSpecialtyState());
   }
 
-  Map workTimes = {
+  dynamic workTimes = {
     'Sunday': {'From': '', 'To': ''},
     'Monday': {'From': '', 'To': ''},
     'Tuesday': {'From': '', 'To': ''},
@@ -130,8 +129,8 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
       (failure) {
         emit(RegisterDoctorFailure(failureMsg: failure.errorMessege));
       },
-      (loginModel) {
-        emit(RegisterDoctorSuccess(loginModel: loginModel));
+      (registerRespone) {
+        emit(RegisterDoctorSuccess(registerResponse: registerRespone));
       },
     );
   }
@@ -154,16 +153,19 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   //   log('Time Models = ${timeModels.toString()}');
   // }
 
-  void storeTimes() {
+  void storeTimes({required String doctorID}) {
     timeModels.clear();
     workTimes.forEach(
       (key, value) {
         if (value['From'] != '' && value['To'] != '') {
-          timeModels.add({
-            '"day"': '"$key"',
-            '"start_time"': '"${value['From']}"',
-            '"end_time"': '"${value['To']}"',
-          });
+          timeModels.add(
+            {
+              "day": key,
+              "start_time": value['From'],
+              "end_time": value['To'],
+              "doctor_id": doctorID,
+            },
+          );
         }
       },
     );
@@ -188,12 +190,12 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     // allTimes = !allTimes;
   }
 
-  Future<void> setWorkTimes() async {
+  Future<void> setWorkTimes({required String doctorID}) async {
     emit(AddWorkTimesLoading());
     (await AddWorkDaysService.addWorkDays(
       token: CacheHelper.getData(key: 'Token'),
-      userID: '9',
-      times: timeModels,
+      docotrID: doctorID,
+      body: timeModels,
     ))
         .fold(
       (failure) {

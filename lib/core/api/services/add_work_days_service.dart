@@ -1,31 +1,53 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:project_one_admin_app/core/api/http_api_services.dart';
 import '../../errors/failures.dart';
+import 'package:http/http.dart' as http;
 
 abstract class AddWorkDaysService {
   static Future<Either<Failure, List<WorkTime>>> addWorkDays({
     required String token,
-    required String userID,
-    required List<Map<String, String>> times,
+    required String docotrID,
+    required List<dynamic> body,
   }) async {
     try {
-      List<WorkTime> workTimes = [];
-      var data = await ApiServices.post(
-        endPoint: 'storeWorkDay',
-        body: {
-          'user_id': userID,
-          'workDay': times,
-        },
-        token: token,
-      );
+      Map<String, String> headers = {};
 
-      for (var item in data['data']) {
-        workTimes.add(WorkTime.fromJson(item));
+      headers.addAll({'Authorization': 'Bearer $token'});
+      const baseUrl = 'http://192.168.60.37:8000/api/';
+      const endPoint = 'storeWorkDay';
+      http.Response response = await http.post(Uri.parse('$baseUrl$endPoint'),
+          body: body, headers: headers);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        log('HTTP POST Data: $data');
+        List<WorkTime> workTimes = [];
+        for (var item in data['data']) {
+          workTimes.add(WorkTime.fromJson(item));
+        }
+        return right(workTimes);
+      } else {
+        throw Exception(
+          'there is an error with status code ${response.statusCode} and with body : ${response.body}',
+        );
       }
 
-      return right(workTimes);
+      // List<WorkTime> workTimes = [];
+      // var data = await ApiServices.post(
+      //   endPoint: 'storeWorkDay',
+      //   body: {
+
+      //   },
+      //   token: token,
+      // );
+
+      // for (var item in data['data']) {
+      //   workTimes.add(WorkTime.fromJson(item));
+      // }
+
+      // return right(workTimes);
     } catch (ex) {
       log('Exception: there is an error in addWorkDays method');
       if (ex is DioException) {
@@ -41,14 +63,14 @@ class WorkTime {
   final String day;
   final String startTime;
   final String endTime;
-  final int userID;
+  final String doctorID;
 
   WorkTime({
     required this.id,
     required this.day,
     required this.startTime,
     required this.endTime,
-    required this.userID,
+    required this.doctorID,
   });
 
   factory WorkTime.fromJson(Map<String, dynamic> jsonData) {
@@ -57,7 +79,7 @@ class WorkTime {
       day: jsonData['day'],
       startTime: jsonData['start_time'],
       endTime: jsonData['end_time'],
-      userID: jsonData['doctor_id'],
+      doctorID: jsonData['doctor_id'],
     );
   }
 }
