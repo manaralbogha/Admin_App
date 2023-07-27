@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:project_one_admin_app/core/api/services/add_work_days_service.dart';
-import 'package:project_one_admin_app/core/api/services/login_service.dart';
+import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
 
 abstract class RegisterDoctorStates extends Equatable {
   @override
@@ -11,10 +11,16 @@ class RegisterDoctorInitial extends RegisterDoctorStates {}
 
 class RegisterDoctorLoading extends RegisterDoctorStates {}
 
-class RegisterDoctorSuccess extends RegisterDoctorStates {
-  final LoginModel loginModel;
+// class RegisterDoctorSuccess extends RegisterDoctorStates {
+//   final LoginModel loginModel;
 
-  RegisterDoctorSuccess({required this.loginModel});
+//   RegisterDoctorSuccess({required this.loginModel});
+// }
+
+class RegisterDoctorSuccess extends RegisterDoctorStates {
+  final RegisterDoctorResponse registerResponse;
+
+  RegisterDoctorSuccess({required this.registerResponse});
 }
 
 class RegisterDoctorFailure extends RegisterDoctorStates {
