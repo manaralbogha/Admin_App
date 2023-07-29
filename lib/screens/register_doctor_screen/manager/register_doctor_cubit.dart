@@ -4,11 +4,14 @@ import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_one_admin_app/core/api/services/add_work_days_service.dart';
+import 'package:project_one_admin_app/core/api/services/get_departments_service.dart';
 import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
 import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
 import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
+import '../../../core/functions/custome_dialogs.dart';
 import '../../../core/functions/custome_snack_bar.dart';
+import '../../../main.dart';
 
 class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   RegisterDoctorModel registerModel = RegisterDoctorModel();
@@ -55,15 +58,22 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     '08:00 PM',
     '09:00 PM',
   ];
-  List<dynamic> timeModels = [];
+  List<Map<String, String>> timeModels = [];
   String? specialty;
+  String? department;
 
   RegisterDoctorCubit() : super(RegisterDoctorInitial());
 
   void selectSpecialty({required String specialty}) {
     emit(RegisterDoctorInitial());
     this.specialty = specialty;
-    emit(AddSpecialtyState());
+    emit(SelectSpecialtyState());
+  }
+
+  void selectDepartment({required String department}) {
+    emit(RegisterDoctorInitial());
+    this.department = department;
+    emit(SelectSpecialtyState());
   }
 
   dynamic workTimes = {
@@ -124,7 +134,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     }
     emit(RegisterDoctorLoading());
     (await RegisterDoctorService.registerDoctor(
-            token: token, registerModel: registerModel))
+            token: token, registerDoctorModel: registerModel))
         .fold(
       (failure) {
         emit(RegisterDoctorFailure(failureMsg: failure.errorMessege));
@@ -169,7 +179,10 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
         }
       },
     );
-    log('Time Models = ${timeModels.toString()}');
+    for (var item in timeModels) {
+      log("${item["doctor_id"]} is ${item["doctor_id"].runtimeType}");
+      log('${item['day']}: From${item['start_time']} =>To${item['end_time']}');
+    }
   }
 
   int nextTimesIndex = 0;
@@ -194,7 +207,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     emit(AddWorkTimesLoading());
     (await AddWorkDaysService.addWorkDays(
       token: CacheHelper.getData(key: 'Token'),
-      docotrID: doctorID,
+      // docotrID: doctorID,
       body: timeModels,
     ))
         .fold(
@@ -202,7 +215,47 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
         emit(AddWorkTimesFailure(failureMsg: failure.errorMessege));
       },
       (workTimes) {
-        emit(AddWorkTimesSuccess(workTimes: workTimes));
+        emit(AddWorkTimesSuccess());
+      },
+    );
+  }
+
+  Future<void> getDepartments(BuildContext context) async {
+    (await GetDepartmentsService.getDepartments(
+            token: await CacheHelper.getData(key: 'Token')))
+        .fold(
+      (failure) {
+        emit(RegisterDoctorFailure(failureMsg: failure.errorMessege));
+      },
+      (departments) {
+        emit(GetDepartmentsSuccess(departments: departments));
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              content: SizedBox(
+                height: screenSize.height * .4,
+                child: Column(
+                  children: List.generate(
+                    departments.length,
+                    (index) => SpecialityDialogButton(
+                      onTap: () {
+                        registerModel.departmentName = departments[index].name;
+                        selectDepartment(
+                          department: departments[index].name,
+                        );
+                        Navigator.pop(context);
+                      },
+                      specialty: departments[index].name,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
       },
     );
   }

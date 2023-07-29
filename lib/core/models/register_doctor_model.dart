@@ -5,6 +5,8 @@ class RegisterDoctorModel {
   String? lastName;
   String? email;
   String? password;
+  String? departmentName;
+  String? description;
   String? phoneNum;
   String? specialty;
   String? consulationPrice;
@@ -19,5 +21,7 @@ class RegisterDoctorModel {
     this.specialty,
     this.consulationPrice,
     this.image,
+    this.departmentName,
+    this.description,
   });
 }

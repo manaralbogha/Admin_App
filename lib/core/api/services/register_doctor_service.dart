@@ -2,33 +2,31 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:project_one_admin_app/core/api/http_api_services.dart';
+import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
 import '../../errors/failures.dart';
-import '../../models/register_doctor_model.dart';
 
 abstract class RegisterDoctorService {
-  static Future<Either<Failure, RegisterDoctorResponse>> registerDoctor(
-      {required String token,
-      required RegisterDoctorModel registerModel}) async {
+  static Future<Either<Failure, RegisterDoctorResponse>> registerDoctor({
+    required String token,
+    required RegisterDoctorModel registerDoctorModel,
+  }) async {
     try {
-      // var file =
-      //     await http.MultipartFile.fromPath('jpg', registerModel.image!.path);
-      var data = await ApiServices.post(
+      var data = await ApiServices.postWithImage(
         endPoint: 'registerDoctor',
         body: {
-          'email': registerModel.email,
-          'first_name': registerModel.firstName,
-          'last_name': registerModel.lastName,
-          'specialty': registerModel.specialty,
-          'password': registerModel.password,
-          'department_name': 'department two',
-          'consultation_price': registerModel.consulationPrice,
-          'phone_num': registerModel.phoneNum,
-          'description': 'ab3zab1234567899',
-          // 'img': file,
+          'email': registerDoctorModel.email!,
+          'first_name': registerDoctorModel.firstName!,
+          'last_name': registerDoctorModel.lastName!,
+          'specialty': registerDoctorModel.specialty!,
+          'password': registerDoctorModel.password!,
+          'department_name': registerDoctorModel.departmentName!,
+          'consultation_price': registerDoctorModel.consulationPrice!,
+          'phone_num': registerDoctorModel.phoneNum!,
+          'description': registerDoctorModel.description!,
         },
+        imagePath: registerDoctorModel.image?.path,
         token: token,
       );
-
       return right(RegisterDoctorResponse.fromJson(data));
     } catch (ex) {
       log('Exception: there is an error in registerDoctor method');

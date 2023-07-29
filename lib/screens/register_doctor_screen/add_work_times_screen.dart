@@ -1,8 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
+import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
 import 'package:project_one_admin_app/core/functions/custome_dialogs.dart';
 import 'package:project_one_admin_app/core/styles/text_styles.dart';
 import 'package:project_one_admin_app/core/widgets/custome_button.dart';
@@ -10,8 +11,10 @@ import 'package:project_one_admin_app/core/widgets/custome_error_widget.dart';
 import 'package:project_one_admin_app/core/widgets/custome_progress_indicator.dart';
 import 'package:project_one_admin_app/core/widgets/custome_text_field.dart';
 import 'package:project_one_admin_app/main.dart';
+import 'package:project_one_admin_app/screens/doctors_screen/doctors_screen.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_cubit.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
+import '../../core/api/services/register_doctor_service.dart';
 import '../../core/styles/colors/colors.dart';
 
 class AddWorkTimesView extends StatelessWidget {
@@ -46,11 +49,14 @@ class AddWorkTimesViewBody extends StatelessWidget {
         } else if (state is AddWorkTimesFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is AddWorkTimesSuccess) {
-          return ListView.builder(
-            itemBuilder: (context, index) => Text(
-              '${state.workTimes[index].day}  ${state.workTimes[index].startTime}  ${state.workTimes[index].endTime}',
-            ),
-            itemCount: state.workTimes.length,
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            // int count = 0;
+            cubit.close();
+            Navigator.popUntil(context, (route) => route.isFirst);
+            // cubit.close();
+          });
+          return DoctorsView(
+            token: CacheHelper.getData(key: 'Token'),
           );
         } else {
           return SingleChildScrollView(
@@ -120,9 +126,11 @@ class AddWorkTimesViewBody extends StatelessWidget {
                     if (cubit.val(context)) {
                       if (cubit.formKey.currentState!.validate()) {
                         cubit.storeTimes(
-                            doctorID: '${registerDoctorResponse.doctorID}');
+                          doctorID: '${registerDoctorResponse.doctorID}',
+                        );
                         cubit.setWorkTimes(
-                            doctorID: '${registerDoctorResponse.doctorID}');
+                          doctorID: '${registerDoctorResponse.doctorID}',
+                        );
                       }
                     }
                   },
