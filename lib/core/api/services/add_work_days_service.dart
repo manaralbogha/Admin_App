@@ -6,48 +6,28 @@ import '../../errors/failures.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AddWorkDaysService {
-  static Future<Either<Failure, List<WorkTime>>> addWorkDays({
+  static const _baseUrl = 'http://192.168.43.37:8000/api/';
+  static const _endPoint = 'storeWorkDay';
+  static Future<Either<Failure, void>> addWorkDays({
     required String token,
-    required String docotrID,
-    required List<dynamic> body,
+    required List<Map<String, String>> body,
   }) async {
     try {
       Map<String, String> headers = {};
-
       headers.addAll({'Authorization': 'Bearer $token'});
-      const baseUrl = 'http://192.168.60.37:8000/api/';
-      const endPoint = 'storeWorkDay';
-      http.Response response = await http.post(Uri.parse('$baseUrl$endPoint'),
-          body: body, headers: headers);
+      http.Response response = await http.post(
+        Uri.parse('$_baseUrl$_endPoint'),
+        body: json.encode(body),
+        headers: headers,
+      );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
-        log('HTTP POST Data: $data');
-        List<WorkTime> workTimes = [];
-        for (var item in data['data']) {
-          workTimes.add(WorkTime.fromJson(item));
-        }
-        return right(workTimes);
+        return right(null);
       } else {
         throw Exception(
           'there is an error with status code ${response.statusCode} and with body : ${response.body}',
         );
       }
-
-      // List<WorkTime> workTimes = [];
-      // var data = await ApiServices.post(
-      //   endPoint: 'storeWorkDay',
-      //   body: {
-
-      //   },
-      //   token: token,
-      // );
-
-      // for (var item in data['data']) {
-      //   workTimes.add(WorkTime.fromJson(item));
-      // }
-
-      // return right(workTimes);
     } catch (ex) {
       log('Exception: there is an error in addWorkDays method');
       if (ex is DioException) {
@@ -58,28 +38,28 @@ abstract class AddWorkDaysService {
   }
 }
 
-class WorkTime {
-  final int id;
-  final String day;
-  final String startTime;
-  final String endTime;
-  final String doctorID;
+// class WorkTime {
+//   final int id;
+//   final String day;
+//   final String startTime;
+//   final String endTime;
+//   final String doctorID;
 
-  WorkTime({
-    required this.id,
-    required this.day,
-    required this.startTime,
-    required this.endTime,
-    required this.doctorID,
-  });
+//   WorkTime({
+//     required this.id,
+//     required this.day,
+//     required this.startTime,
+//     required this.endTime,
+//     required this.doctorID,
+//   });
 
-  factory WorkTime.fromJson(Map<String, dynamic> jsonData) {
-    return WorkTime(
-      id: jsonData['id'],
-      day: jsonData['day'],
-      startTime: jsonData['start_time'],
-      endTime: jsonData['end_time'],
-      doctorID: jsonData['doctor_id'],
-    );
-  }
-}
+//   factory WorkTime.fromJson(Map<String, dynamic> jsonData) {
+//     return WorkTime(
+//       id: jsonData['id'],
+//       day: jsonData['day'],
+//       startTime: jsonData['start_time'],
+//       endTime: jsonData['end_time'],
+//       doctorID: jsonData['doctor_id'],
+//     );
+//   }
+// }

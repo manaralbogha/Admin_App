@@ -12,10 +12,11 @@ import 'package:project_one_admin_app/core/widgets/custome_error_widget.dart';
 import 'package:project_one_admin_app/core/widgets/custome_progress_indicator.dart';
 import 'package:project_one_admin_app/core/widgets/custome_text_field.dart';
 import 'package:project_one_admin_app/main.dart';
-import 'package:project_one_admin_app/screens/register_doctor_screen/add_work_times_screen.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_cubit.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/widgets/pick_image_widget.dart';
+
+import 'add_work_times_screen.dart';
 
 class RegisterDoctorView extends StatelessWidget {
   static const route = 'RegisterDoctorView';
@@ -52,8 +53,12 @@ class RegisterDoctorViewBody extends StatelessWidget {
         } else if (state is RegisterDoctorFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is RegisterDoctorSuccess) {
+          // return const Center(
+          //   child: Text('Succes'),
+          // );
           return AddWorkTimesView(
-              registerDoctorResponse: state.registerResponse);
+            registerDoctorResponse: state.registerResponse,
+          );
         } else {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -81,6 +86,7 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     CustomeTextField(
                       initialValue: cubit.registerModel.firstName ?? '',
                       hintText: 'First Name ...',
+                      textCapitalization: TextCapitalization.sentences,
                       iconData: Icons.person,
                       onChanged: (value) =>
                           cubit.registerModel.firstName = value,
@@ -88,6 +94,7 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     SizedBox(height: screenSize.height * .02),
                     CustomeTextField(
                       hintText: 'Last Name ...',
+                      textCapitalization: TextCapitalization.sentences,
                       iconData: Icons.person,
                       onChanged: (value) =>
                           cubit.registerModel.lastName = value,
@@ -201,11 +208,43 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     ),
                     SizedBox(height: screenSize.height * .02),
                     CustomeTextField(
+                      disableFocusNode: true,
+                      hintText: cubit.department ?? 'Department ...',
+                      hintStyle: cubit.department != null
+                          ? const TextStyle(color: Colors.black)
+                          : null,
+                      iconData: Icons.account_tree_rounded,
+                      suffixIcon: const Icon(
+                        Icons.expand_more_sharp,
+                        size: 40,
+                        color: defaultColor,
+                      ),
+                      validator: (value) {
+                        if (cubit.specialty == null) {
+                          return 'required';
+                        }
+                        return null;
+                      },
+                      onTap: () {
+                        cubit.getDepartments(context);
+                      },
+                    ),
+                    SizedBox(height: screenSize.height * .02),
+                    CustomeTextField(
                       hintText: 'Consulation Price ...',
                       keyboardType: TextInputType.number,
                       iconData: Icons.attach_money,
                       onChanged: (value) =>
                           cubit.registerModel.consulationPrice = value,
+                    ),
+                    SizedBox(height: screenSize.height * .02),
+                    CustomeDescriptionTextField(
+                      hintText: 'Description ...',
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 5,
+                      iconData: Icons.description,
+                      onChanged: (value) =>
+                          cubit.registerModel.description = value,
                     ),
                     SizedBox(height: screenSize.height * .05),
                     CustomeButton(

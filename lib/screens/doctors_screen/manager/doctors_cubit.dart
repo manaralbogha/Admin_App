@@ -11,9 +11,11 @@ class DoctorCubit extends Cubit<DoctorsStates> {
     emit(DoctorsLoading());
     (await GetDoctorsService.getDoctors(token: token)).fold(
       (failure) {
+        if (isClosed) return;
         emit(DoctorsFailure(failureMsg: failure.errorMessege));
       },
       (doctors) {
+        if (isClosed) return;
         emit(DoctorsSuccess(doctors: doctors));
       },
     );
