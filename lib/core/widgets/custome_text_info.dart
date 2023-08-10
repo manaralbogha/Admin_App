@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_one_admin_app/core/styles/text_styles.dart';
+
 import '../styles/colors/colors.dart';
 
 class CustomeTextInfo extends StatelessWidget {
@@ -13,16 +13,19 @@ class CustomeTextInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // CustomeIcon(icon: iconData),
         Icon(
           iconData,
           color: defaultColor,
+          size: 30,
         ),
         const SizedBox(width: 5),
-        SizedBox(
-          width: 175.w,
+        Container(
+          padding: const EdgeInsets.only(bottom: 5),
+          // width: 175.w,
           child: Text(
             text,
-            style: TextStyles.textStyle16,
+            style: TextStyles.textStyle16.copyWith(color: Colors.black),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

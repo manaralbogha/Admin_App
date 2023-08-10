@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
 import 'package:project_one_admin_app/core/functions/custome_dialogs.dart';
+import 'package:project_one_admin_app/core/models/work_day_model.dart';
 import 'package:project_one_admin_app/core/styles/text_styles.dart';
 import 'package:project_one_admin_app/core/widgets/custome_button.dart';
 import 'package:project_one_admin_app/core/widgets/custome_error_widget.dart';
@@ -14,46 +15,71 @@ import 'package:project_one_admin_app/main.dart';
 import 'package:project_one_admin_app/screens/doctors_screen/doctors_screen.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_cubit.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
-import '../../core/api/services/register_doctor_service.dart';
 import '../../core/styles/colors/colors.dart';
 
 class AddWorkTimesView extends StatelessWidget {
   static const route = 'AddWorkTimesView';
-  final RegisterDoctorResponse registerDoctorResponse;
-  const AddWorkTimesView({super.key, required this.registerDoctorResponse});
+  // final RegisterDoctorResponse registerDoctorResponse;
+  final int doctorID;
+  final List<WorkDayModel>? doctorTimes;
+  const AddWorkTimesView({
+    super.key,
+    required this.doctorID,
+    this.doctorTimes,
+    // required this.registerDoctorResponse,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RegisterDoctorCubit(),
+      create: doctorTimes == null
+          ? (context) => RegisterDoctorCubit()
+          : (context) =>
+              RegisterDoctorCubit()..setComingDoctorTimes(list: doctorTimes!),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Select Work Times')),
+        appBar: AppBar(
+          title: Text(
+            doctorTimes == null ? 'Select Work Times' : 'Update Work Times',
+          ),
+        ),
         body: AddWorkTimesViewBody(
-            registerDoctorResponse: registerDoctorResponse),
+          doctorID: doctorID,
+          doctorTimes: doctorTimes,
+          // registerDoctorResponse: registerDoctorResponse,
+        ),
       ),
     );
   }
 }
 
 class AddWorkTimesViewBody extends StatelessWidget {
-  final RegisterDoctorResponse registerDoctorResponse;
-  const AddWorkTimesViewBody({super.key, required this.registerDoctorResponse});
+  // final RegisterDoctorResponse registerDoctorResponse;
+  final int doctorID;
+  final List<WorkDayModel>? doctorTimes;
+  const AddWorkTimesViewBody({
+    super.key,
+    required this.doctorID,
+    this.doctorTimes,
+    // required this.registerDoctorResponse,
+  });
 
   @override
   Widget build(BuildContext context) {
     RegisterDoctorCubit cubit = BlocProvider.of(context);
     return BlocBuilder<RegisterDoctorCubit, RegisterDoctorStates>(
       builder: (context, state) {
-        if (state is AddWorkTimesLoading) {
+        if (state is WorkTimesLoading) {
           return const CustomeProgressIndicator();
-        } else if (state is AddWorkTimesFailure) {
+        } else if (state is WorkTimesFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
-        } else if (state is AddWorkTimesSuccess) {
+        } else if (state is WorkTimesSuccess) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            // int count = 0;
             cubit.close();
-            Navigator.popUntil(context, (route) => route.isFirst);
-            // cubit.close();
+            if (doctorTimes != null && (doctorTimes?.isNotEmpty ?? false)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
           });
           return DoctorsView(
             token: CacheHelper.getData(key: 'Token'),
@@ -64,7 +90,7 @@ class AddWorkTimesViewBody extends StatelessWidget {
               children: [
                 SizedBox(height: screenSize.height * .03),
                 Container(
-                  height: screenSize.height * .75,
+                  height: screenSize.height * .8,
                   margin: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
@@ -109,6 +135,12 @@ class AddWorkTimesViewBody extends StatelessWidget {
                                   _SelectTimeItem(
                                     day: cubit.days[index],
                                     indexR: index,
+                                    workDayModel: doctorTimes == null
+                                        ? null
+                                        : cubit.getDoctorWorkTimeModel(
+                                            list: doctorTimes!,
+                                            day: cubit.days[index],
+                                          ),
                                   ),
                                 ],
                               ),
@@ -121,18 +153,26 @@ class AddWorkTimesViewBody extends StatelessWidget {
                 ),
                 SizedBox(height: screenSize.height * .03),
                 CustomeButton(
-                  text: 'Submit',
-                  onPressed: () {
+                  text: doctorTimes == null ? 'Submit' : 'Update',
+                  onPressed: () async {
                     if (cubit.val(context)) {
                       if (cubit.formKey.currentState!.validate()) {
+                        if (doctorTimes != null) {
+                          if (doctorTimes!.isNotEmpty) {
+                            log('Testooooo');
+                            await cubit.deleteDoctorWorkDays(list: doctorTimes);
+                          }
+                        }
                         cubit.storeTimes(
-                          doctorID: '${registerDoctorResponse.doctorID}',
+                          doctorID: '$doctorID',
                         );
-                        cubit.setWorkTimes(
-                          doctorID: '${registerDoctorResponse.doctorID}',
+                        await cubit.setWorkTimes(
+                          doctorID: '$doctorID',
                         );
+                        log('xxxxxxxxx');
                       }
                     }
+                    log(doctorTimes.toString());
                   },
                 ),
                 SizedBox(height: screenSize.height * .03),
@@ -148,7 +188,12 @@ class AddWorkTimesViewBody extends StatelessWidget {
 class _SelectTimeItem extends StatelessWidget {
   final String day;
   final int indexR;
-  const _SelectTimeItem({required this.day, required this.indexR});
+  final WorkDayModel? workDayModel;
+  const _SelectTimeItem({
+    required this.day,
+    required this.indexR,
+    this.workDayModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,18 +208,31 @@ class _SelectTimeItem extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        _CustomeTextField(indexR: indexR, type: 'From'),
-        _CustomeTextField(indexR: indexR, type: 'To'),
+        _CustomeTextField(
+          indexR: indexR,
+          type: 'From',
+          // workDayModel: workDayModel,
+        ),
+        _CustomeTextField(
+          indexR: indexR,
+          type: 'To',
+          // workDayModel: workDayModel,
+        ),
       ],
     );
   }
 }
 
+// ignore: must_be_immutable
 class _CustomeTextField extends StatefulWidget {
   final int indexR;
   final String type;
-
-  const _CustomeTextField({required this.indexR, required this.type});
+  // WorkDayModel? workDayModel;
+  const _CustomeTextField({
+    required this.indexR,
+    required this.type,
+    // this.workDayModel,
+  });
 
   @override
   State<_CustomeTextField> createState() => _CustomeTextFieldState();
@@ -182,9 +240,11 @@ class _CustomeTextField extends StatefulWidget {
 
 class _CustomeTextFieldState extends State<_CustomeTextField> {
   String? _hintText;
+
   @override
   Widget build(BuildContext context) {
     RegisterDoctorCubit cubit = BlocProvider.of(context);
+    _hintText = cubit.workTimes[cubit.days[widget.indexR]][widget.type];
     return BlocBuilder<RegisterDoctorCubit, RegisterDoctorStates>(
       builder: (context, state) {
         return SizedBox(
@@ -196,7 +256,7 @@ class _CustomeTextFieldState extends State<_CustomeTextField> {
                   index: widget.indexR,
                   type: widget.type,
                 );
-                if (s.isEmpty) {
+                if (s == '__') {
                   return 'required';
                 }
               }
@@ -204,65 +264,84 @@ class _CustomeTextFieldState extends State<_CustomeTextField> {
             },
             focusNode: AlwaysDisabledFocusNode(),
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(
-                        widget.type == 'From'
-                            ? cubit.times.length
-                            : cubit.nextTimes.length,
-                        (index) => CustomeDialogs.timeDialogButton(
-                          context,
-                          time: widget.type == 'From'
-                              ? cubit.times[index]
-                              : cubit.nextTimes[index],
-                          onTap: () {
-                            if (widget.type == 'From') {
-                              cubit.nextTimesIndex = index;
-                            }
-                            // cubit.setNextTimes();
-                            if (widget.type == 'From') {
-                              _hintText = cubit.times[index];
-                            } else {
-                              _hintText = cubit.nextTimes[index];
-                            }
+              if (_hintText == '__') {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      content: SingleChildScrollView(
+                        child: SizedBox(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(
+                              widget.type == 'From'
+                                  ? cubit.times.length
+                                  : cubit.nextTimes.length,
+                              (index) => CustomeDialogs.timeDialogButton(
+                                context,
+                                time: widget.type == 'From'
+                                    ? cubit.times[index]
+                                    : cubit.nextTimes[index],
+                                onTap: () {
+                                  if (widget.type == 'From') {
+                                    cubit.nextTimesIndex = index;
+                                  }
+                                  // cubit.setNextTimes();
+                                  if (widget.type == 'From') {
+                                    _hintText = cubit.times[index];
+                                  } else {
+                                    _hintText = cubit.nextTimes[index];
+                                  }
 
-                            cubit.selectTime(
-                              time: widget.type == 'From'
-                                  ? cubit.times[index]
-                                  : cubit.nextTimes[index],
-                              index: widget.indexR,
-                              type: widget.type,
-                            );
-                            cubit.setNextTimes();
-                            // if (widget.type == 'To') {
-                            cubit.allTimes = !cubit.allTimes;
-                            // }
-                            Navigator.pop(context);
-                            log('Next Times Length = ${cubit.nextTimes.length}');
-                          },
+                                  cubit.selectTime(
+                                    time: widget.type == 'From'
+                                        ? cubit.times[index]
+                                        : cubit.nextTimes[index],
+                                    index: widget.indexR,
+                                    type: widget.type,
+                                  );
+                                  cubit.setNextTimes();
+                                  // if (widget.type == 'To') {
+                                  cubit.allTimes = !cubit.allTimes;
+                                  // }
+                                  Navigator.pop(context);
+                                  log('Next Times Length = ${cubit.nextTimes.length}');
+                                  log('Hint Texxxxxxxxt = $_hintText');
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              );
+                    );
+                  },
+                );
+              } else {
+                setState(() {
+                  cubit.workTimes[cubit.days[widget.indexR]][widget.type] =
+                      '__';
+                });
+              }
             },
             decoration: InputDecoration(
-              hintText: _hintText ?? '__',
+              hintText: _hintText,
               hintStyle: TextStyle(fontSize: 11.w, fontWeight: FontWeight.w500),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              suffixIcon: const Icon(
-                Icons.expand_more_sharp,
-                size: 40,
-                color: defaultColor,
-              ),
+              suffixIcon: _hintText == '__'
+                  ? const Icon(
+                      Icons.expand_more_sharp,
+                      size: 40,
+                      color: defaultColor,
+                    )
+                  : const Icon(
+                      Icons.close,
+                      size: 30,
+                      color: defaultColor,
+                      // :
+                    ),
             ),
           ),
         );

@@ -37,17 +37,17 @@ class SelectTimeState extends RegisterDoctorStates {}
 
 class ChangePasswordState extends RegisterDoctorStates {}
 
-class AddWorkTimesLoading extends RegisterDoctorStates {}
+class WorkTimesLoading extends RegisterDoctorStates {}
 
-class AddWorkTimesSuccess extends RegisterDoctorStates {
+class WorkTimesSuccess extends RegisterDoctorStates {
   // final List<WorkTime> workTimes;
 
-  AddWorkTimesSuccess();
+  WorkTimesSuccess();
   // AddWorkTimesSuccess({required this.workTimes});
 }
 
-class AddWorkTimesFailure extends RegisterDoctorStates {
+class WorkTimesFailure extends RegisterDoctorStates {
   final String failureMsg;
 
-  AddWorkTimesFailure({required this.failureMsg});
+  WorkTimesFailure({required this.failureMsg});
 }

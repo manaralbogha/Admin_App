@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_one_admin_app/core/functions/custome_dialogs.dart';
+import 'package:project_one_admin_app/core/functions/custome_snack_bar.dart';
 import 'package:project_one_admin_app/core/styles/colors/colors.dart';
 import 'package:project_one_admin_app/core/styles/text_styles.dart';
 import 'package:project_one_admin_app/core/widgets/custome_button.dart';
-import 'package:project_one_admin_app/core/widgets/custome_error_widget.dart';
 import 'package:project_one_admin_app/core/widgets/custome_progress_indicator.dart';
 import 'package:project_one_admin_app/core/widgets/custome_text_field.dart';
 import 'package:project_one_admin_app/main.dart';
@@ -46,18 +46,19 @@ class RegisterDoctorViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RegisterDoctorCubit cubit = BlocProvider.of(context);
-    return BlocBuilder<RegisterDoctorCubit, RegisterDoctorStates>(
+    return BlocConsumer<RegisterDoctorCubit, RegisterDoctorStates>(
+      listener: (context, state) {
+        if (state is RegisterDoctorFailure) {
+          CustomeSnackBar.showErrorSnackBar(context, msg: state.failureMsg);
+        }
+      },
       builder: (context, state) {
         if (state is RegisterDoctorLoading) {
           return const CustomeProgressIndicator();
-        } else if (state is RegisterDoctorFailure) {
-          return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is RegisterDoctorSuccess) {
-          // return const Center(
-          //   child: Text('Succes'),
-          // );
           return AddWorkTimesView(
-            registerDoctorResponse: state.registerResponse,
+            doctorID: state.registerResponse.doctorID,
+            // registerDoctorResponse: state.registerResponse,
           );
         } else {
           return SingleChildScrollView(
@@ -103,6 +104,17 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     CustomeTextField(
                       hintText: 'Email ...',
                       keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'required';
+                        } else {
+                          if (!RegExp(r'\S+@\S+\.\S+')
+                              .hasMatch(value.toString())) {
+                            return "Please enter a valid email address";
+                          }
+                        }
+                        return null;
+                      },
                       onChanged: (value) => cubit.registerModel.email = value,
                     ),
                     SizedBox(height: screenSize.height * .02),
@@ -211,7 +223,10 @@ class RegisterDoctorViewBody extends StatelessWidget {
                       disableFocusNode: true,
                       hintText: cubit.department ?? 'Department ...',
                       hintStyle: cubit.department != null
-                          ? const TextStyle(color: Colors.black)
+                          ? const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            )
                           : null,
                       iconData: Icons.account_tree_rounded,
                       suffixIcon: const Icon(
@@ -240,6 +255,14 @@ class RegisterDoctorViewBody extends StatelessWidget {
                     SizedBox(height: screenSize.height * .02),
                     CustomeDescriptionTextField(
                       hintText: 'Description ...',
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'required';
+                        } else if (value!.length < 10) {
+                          return 'At least 10 characters';
+                        }
+                        return null;
+                      },
                       keyboardType: TextInputType.multiline,
                       maxLines: 5,
                       iconData: Icons.description,

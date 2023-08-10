@@ -10,7 +10,7 @@ abstract class DeleteWorkDayService {
       {required String token, required int id}) async {
     try {
       var data = await ApiServices.post(
-          endPoint: 'deleteWorkDay', body: {'id': id}, token: token);
+          endPoint: 'deleteWorkDay', body: {'id': '$id'}, token: token);
 
       return right(MessageModel.fromJson(data));
     } catch (ex) {

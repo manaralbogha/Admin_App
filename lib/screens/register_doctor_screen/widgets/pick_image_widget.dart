@@ -3,17 +3,26 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_one_admin_app/core/styles/colors/colors.dart';
+import 'package:project_one_admin_app/screens/doctor_details_screen/manager/doctor_details_cubit.dart';
 import '../../../core/utils/app_assets.dart';
 import '../../../core/widgets/custome_image.dart';
 import '../../../main.dart';
 import '../manager/register_doctor_cubit.dart';
 
 class PickImageWidget extends StatefulWidget {
-  const PickImageWidget({super.key});
+  final String? image;
+  final RegisterDoctorCubit? registerDoctorCubit;
+  final DoctorDetailsCubit? detailsCubit;
+
+  const PickImageWidget({
+    super.key,
+    this.image,
+    this.registerDoctorCubit,
+    this.detailsCubit,
+  });
 
   @override
   State<PickImageWidget> createState() => _PickImageWidgetState();
@@ -27,11 +36,18 @@ class _PickImageWidgetState extends State<PickImageWidget> {
     return Stack(
       children: [
         _image == null
-            ? CustomeImage(
-                image: AppAssets.registerDoctorImage,
-                width: screenSize.width * .51,
-                borderRadius: BorderRadius.circular(screenSize.width * .5),
-              )
+            ? (widget.image == null || widget.image == 'default')
+                ? CustomeImage(
+                    image: AppAssets.registerDoctorImage,
+                    width: screenSize.width * .51,
+                    borderRadius: BorderRadius.circular(screenSize.width * .5),
+                  )
+                : CustomeNetworkImage(
+                    imageUrl: widget.image,
+                    width: screenSize.width * .51,
+                    fit: BoxFit.cover,
+                    borderRadius: BorderRadius.circular(screenSize.width * .5),
+                  )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(screenSize.height * .2),
                 child: Image.file(
@@ -52,7 +68,11 @@ class _PickImageWidgetState extends State<PickImageWidget> {
             shape: const CircleBorder(),
             color: defaultColor,
             child: Icon(
-              _image == null ? Icons.add_a_photo : Icons.edit,
+              widget.image != null
+                  ? Icons.edit
+                  : _image == null
+                      ? Icons.add_a_photo
+                      : Icons.edit,
               size: 20.w,
               color: Colors.white,
             ),
@@ -63,7 +83,7 @@ class _PickImageWidgetState extends State<PickImageWidget> {
   }
 
   void _showBottomSheet(BuildContext context) {
-    RegisterDoctorCubit cubit = BlocProvider.of<RegisterDoctorCubit>(context);
+    // RegisterDoctorCubit cubit = BlocProvider.of<RegisterDoctorCubit>(context);
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -102,7 +122,12 @@ class _PickImageWidgetState extends State<PickImageWidget> {
                     final XFile? image = await picker.pickImage(
                         source: ImageSource.camera, imageQuality: 80);
                     if (image != null) {
-                      cubit.imageFile = File(image.path);
+                      if (widget.registerDoctorCubit != null) {
+                        widget.registerDoctorCubit!.imageFile =
+                            File(image.path);
+                      } else if (widget.detailsCubit != null) {
+                        widget.detailsCubit!.doctorImage = image.path;
+                      }
 
                       log('Image Path : ${image.path} -- Mime Type : ${image.mimeType}');
 
@@ -131,7 +156,12 @@ class _PickImageWidgetState extends State<PickImageWidget> {
                     final XFile? image = await picker.pickImage(
                         source: ImageSource.gallery, imageQuality: 80);
                     if (image != null) {
-                      cubit.imageFile = File(image.path);
+                      if (widget.registerDoctorCubit != null) {
+                        widget.registerDoctorCubit!.imageFile =
+                            File(image.path);
+                      } else if (widget.detailsCubit != null) {
+                        widget.detailsCubit!.doctorImage = image.path;
+                      }
                       log('Image Path : ${image.path} -- Mime Type : ${image.mimeType}');
 
                       setState(() {
