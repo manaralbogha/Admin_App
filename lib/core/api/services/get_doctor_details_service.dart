@@ -12,8 +12,8 @@ abstract class GetDoctorDetailsService {
       {required int userID}) async {
     try {
       var data = await ApiServices.post(
-          endPoint: 'viewDoctor', body: {'user_id': userID});
-      return right(DoctorModel.fromJson(data));
+          endPoint: 'viewDoctor', body: {'user_id': '$userID'});
+      return right(DoctorModel.fromJson(data['doctor']));
     } catch (ex) {
       log('Exception: there is an error in getDoctorDetails method');
       if (ex is DioException) {

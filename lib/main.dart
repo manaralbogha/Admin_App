@@ -31,13 +31,26 @@ class AdminApp extends StatelessWidget {
             LoginView.route: (context) => const LoginView(),
             DoctorDetailsView.route: (context) => const DoctorDetailsView(),
             RegisterDoctorView.route: (context) => const RegisterDoctorView(),
-            // AddWorkTimesView.route: (context) => const AddWorkTimesView(),
             DoctorsView.route: (context) =>
                 DoctorsView(token: CacheHelper.getData(key: 'Token')),
           },
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            appBarTheme: const AppBarTheme(
+            useMaterial3: true,
+            floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              shape: CircleBorder(),
+              foregroundColor: Colors.white,
+            ),
+            appBarTheme: AppBarTheme(
+              iconTheme: const IconThemeData(color: Colors.white),
+              actionsIconTheme: const IconThemeData(color: Colors.white),
+              titleTextStyle:
+                  const TextStyle(color: Colors.white, fontSize: 25),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(22.r),
+                ),
+              ),
               color: defaultColor,
               centerTitle: true,
             ),

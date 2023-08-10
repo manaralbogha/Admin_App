@@ -30,6 +30,7 @@ abstract class AddWorkDaysService {
       }
     } catch (ex) {
       log('Exception: there is an error in addWorkDays method');
+      log(ex.toString());
       if (ex is DioException) {
         return left(ServerFailure.fromDioError(ex));
       }

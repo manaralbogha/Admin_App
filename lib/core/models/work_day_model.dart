@@ -1,8 +1,8 @@
 class WorkDayModel {
   final int id;
   final String day;
-  final String startTime;
-  final String endTime;
+  String startTime;
+  String endTime;
   final int doctorID;
 
   WorkDayModel({

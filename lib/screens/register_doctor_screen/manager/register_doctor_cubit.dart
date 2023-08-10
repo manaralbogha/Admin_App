@@ -4,6 +4,7 @@ import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_one_admin_app/core/api/services/add_work_days_service.dart';
+import 'package:project_one_admin_app/core/api/services/delete_work_day_service.dart';
 import 'package:project_one_admin_app/core/api/services/get_departments_service.dart';
 import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
 import 'package:project_one_admin_app/core/api/services/register_doctor_service.dart';
@@ -11,6 +12,7 @@ import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
 import 'package:project_one_admin_app/screens/register_doctor_screen/manager/register_doctor_states.dart';
 import '../../../core/functions/custome_dialogs.dart';
 import '../../../core/functions/custome_snack_bar.dart';
+import '../../../core/models/work_day_model.dart';
 import '../../../main.dart';
 
 class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
@@ -77,18 +79,18 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   }
 
   dynamic workTimes = {
-    'Sunday': {'From': '', 'To': ''},
-    'Monday': {'From': '', 'To': ''},
-    'Tuesday': {'From': '', 'To': ''},
-    'Wednesday': {'From': '', 'To': ''},
-    'Thursday': {'From': '', 'To': ''},
-    'Friday': {'From': '', 'To': ''},
-    'Saturday': {'From': '', 'To': ''},
+    'Sunday': {'From': '__', 'To': '__'},
+    'Monday': {'From': '__', 'To': '__'},
+    'Tuesday': {'From': '__', 'To': '__'},
+    'Wednesday': {'From': '__', 'To': '__'},
+    'Thursday': {'From': '__', 'To': '__'},
+    'Friday': {'From': '__', 'To': '__'},
+    'Saturday': {'From': '__', 'To': '__'},
   };
 
   bool val(BuildContext context) {
     for (String key in workTimes.keys) {
-      if (workTimes[key]['From'] != '' || workTimes[key]['To'] != '') {
+      if (workTimes[key]['From'] != '__' || workTimes[key]['To'] != '__') {
         return true;
       }
     }
@@ -103,8 +105,8 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     required int index,
     required String type,
   }) {
-    if (workTimes[days[index]]['From'] == '' &&
-        workTimes[days[index]]['To'] == '') return 'not requeued';
+    if (workTimes[days[index]]['From'] == '__' &&
+        workTimes[days[index]]['To'] == '__') return 'not required';
     return workTimes[days[index]][type];
   }
 
@@ -167,7 +169,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     timeModels.clear();
     workTimes.forEach(
       (key, value) {
-        if (value['From'] != '' && value['To'] != '') {
+        if (value['From'] != '__' && value['To'] != '__') {
           timeModels.add(
             {
               "day": key,
@@ -204,7 +206,7 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
   }
 
   Future<void> setWorkTimes({required String doctorID}) async {
-    emit(AddWorkTimesLoading());
+    emit(WorkTimesLoading());
     (await AddWorkDaysService.addWorkDays(
       token: CacheHelper.getData(key: 'Token'),
       // docotrID: doctorID,
@@ -212,10 +214,10 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
     ))
         .fold(
       (failure) {
-        emit(AddWorkTimesFailure(failureMsg: failure.errorMessege));
+        emit(WorkTimesFailure(failureMsg: failure.errorMessege));
       },
       (workTimes) {
-        emit(AddWorkTimesSuccess());
+        emit(WorkTimesSuccess());
       },
     );
   }
@@ -258,5 +260,36 @@ class RegisterDoctorCubit extends Cubit<RegisterDoctorStates> {
         );
       },
     );
+  }
+
+  void setComingDoctorTimes({required List<WorkDayModel> list}) {
+    for (WorkDayModel model in list) {
+      workTimes[model.day]['From'] = model.startTime;
+      workTimes[model.day]['To'] = model.endTime;
+    }
+  }
+
+  WorkDayModel? getDoctorWorkTimeModel(
+      {required List<WorkDayModel> list, required String day}) {
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].day == day) {
+        return list[i];
+      }
+    }
+    return null;
+  }
+
+  Future<void> deleteDoctorWorkDays({required List<WorkDayModel>? list}) async {
+    if (list != null && list.isNotEmpty) {
+      emit(WorkTimesLoading());
+      for (WorkDayModel item in list) {
+        (await DeleteWorkDayService.deleteWorkDay(
+                token: CacheHelper.getData(key: 'Token'), id: item.id))
+            .fold(
+          (failure) => emit(WorkTimesFailure(failureMsg: failure.errorMessege)),
+          (success) {},
+        );
+      }
+    }
   }
 }
