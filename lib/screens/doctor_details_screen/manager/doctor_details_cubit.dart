@@ -6,7 +6,6 @@ import 'package:project_one_admin_app/core/api/services/delete_doctor_service.da
 import 'package:project_one_admin_app/core/api/services/get_department_details_service.dart';
 import 'package:project_one_admin_app/core/api/services/get_work_days_service.dart';
 import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
-import 'package:project_one_admin_app/core/functions/custome_snack_bar.dart';
 import 'package:project_one_admin_app/core/models/department_model.dart';
 import 'package:project_one_admin_app/core/models/doctor_model.dart';
 import 'package:project_one_admin_app/core/models/work_day_model.dart';
@@ -44,6 +43,11 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsStates> {
         );
       },
     );
+  }
+
+  Future<void> refreshDoctor({required DoctorModel doctorModel}) async {
+    await storeDoctorWorkDays(doctorID: doctorModel.id);
+    await getDoctorDetails(userID: doctorModel.userID);
   }
 
   List<WorkDayModel> getDoctorWorkDays({
@@ -99,25 +103,26 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsStates> {
       ))
           .fold(
         (failure) {
+          // Navigator.pop(context);
           emit(DoctorDetailsFailure(failureMsg: failure.errorMessege));
-          Navigator.pop(context);
-          CustomeSnackBar.showErrorSnackBar(context, msg: failure.errorMessege);
+          // CustomeSnackBar.showErrorSnackBar(context, msg: failure.errorMessege);
         },
         (success) async {
-          (await GetDoctorDetailsService.getDoctorDetails(
-                  userID: doctorModel.userID))
-              .fold(
-            (failure) {
-              emit(DoctorDetailsFailure(failureMsg: failure.errorMessege));
-              Navigator.pop(context);
-              CustomeSnackBar.showErrorSnackBar(context,
-                  msg: failure.errorMessege);
-            },
-            (doctorModel) {
-              emit(FetchDoctorDetailsSuccess(doctorModel: doctorModel));
-              Navigator.pop(context);
-            },
-          );
+          await getDoctorDetails(userID: doctorModel.userID);
+          // (await GetDoctorDetailsService.getDoctorDetails(
+          //         userID: doctorModel.userID))
+          //     .fold(
+          //   (failure) {
+          //     Navigator.pop(context);
+          //     emit(DoctorDetailsFailure(failureMsg: failure.errorMessege));
+          //     // CustomeSnackBar.showErrorSnackBar(context,
+          //     //     msg: failure.errorMessege);
+          //   },
+          //   (doctorModel) {
+          //     Navigator.pop(context);
+          //     emit(FetchDoctorDetailsSuccess(doctorModel: doctorModel));
+          //   },
+          // );
         },
       );
       log('update with image zzzzzzzzzzzzzzzz');
@@ -128,28 +133,41 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsStates> {
       ))
           .fold(
         (failure) {
+          // Navigator.pop(context);
           emit(DoctorDetailsFailure(failureMsg: failure.errorMessege));
-          Navigator.pop(context);
-          CustomeSnackBar.showErrorSnackBar(context, msg: failure.errorMessege);
+
+          // CustomeSnackBar.showErrorSnackBar(context, msg: failure.errorMessege);
         },
         (success) async {
-          (await GetDoctorDetailsService.getDoctorDetails(
-                  userID: doctorModel.userID))
-              .fold(
-            (failure) {
-              emit(DoctorDetailsFailure(failureMsg: failure.errorMessege));
-              Navigator.pop(context);
-              CustomeSnackBar.showErrorSnackBar(context,
-                  msg: failure.errorMessege);
-            },
-            (doctorModel) {
-              emit(FetchDoctorDetailsSuccess(doctorModel: doctorModel));
-              Navigator.pop(context);
-            },
-          );
+          await getDoctorDetails(userID: doctorModel.userID);
+          // (await GetDoctorDetailsService.getDoctorDetails(
+          //         userID: doctorModel.userID))
+          //     .fold(
+          //   (failure) {
+          //     Navigator.pop(context);
+          //     emit(DoctorDetailsFailure(failureMsg: failure.errorMessege));
+          //     // CustomeSnackBar.showErrorSnackBar(context,
+          //     //     msg: failure.errorMessege);
+          //   },
+          //   (doctorModel) {
+          //     Navigator.pop(context);
+          //     emit(FetchDoctorDetailsSuccess(doctorModel: doctorModel));
+          //   },
+          // );
         },
       );
       log('update without image zzzzzzzzzzzzzzzz');
     }
+  }
+
+  Future<void> getDoctorDetails({required int userID}) async {
+    (await GetDoctorDetailsService.getDoctorDetails(userID: userID)).fold(
+      (failure) {
+        emit(DoctorDetailsFailure(failureMsg: failure.errorMessege));
+      },
+      (doctorModel) {
+        emit(FetchDoctorDetailsSuccess(doctorModel: doctorModel));
+      },
+    );
   }
 }

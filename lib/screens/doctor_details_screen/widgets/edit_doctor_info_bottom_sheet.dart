@@ -93,8 +93,11 @@ abstract class EditDoctorInfoBottomSheet {
                   CustomeButton(
                     text: 'Update',
                     onPressed: () async {
-                      if (formKey.currentState!.validate() &&
+                      if (!change && cubit.doctorImage == null) {
+                        Navigator.pop(context);
+                      } else if (formKey.currentState!.validate() &&
                           (change || cubit.doctorImage != null)) {
+                        Navigator.pop(context);
                         DoctorModel update = DoctorModel(
                             id: doctorModel.id,
                             specialty: doctorModel.specialty,
