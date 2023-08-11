@@ -13,14 +13,15 @@ abstract class UpdateDoctorDetailsService {
       ApiServices.postWithImage(
         endPoint: 'updateDoctor',
         body: {
-          'user_id': "${doctorModel.user.id}",
+          'id': "${doctorModel.id}",
           'first_name': doctorModel.user.firstName,
           'last_name': doctorModel.user.lastName,
+          'email': doctorModel.user.email,
           'specialty': doctorModel.specialty,
-          'department_id': "${doctorModel.departmentID}",
           'consultation_price': "${doctorModel.consultationPrice}",
           'phone_num': doctorModel.user.phoneNum,
           'department_name': deparmentName,
+          'description': doctorModel.description,
         },
         imagePath: doctorModel.imagePath,
         token: CacheHelper.getData(key: 'Token'),
@@ -41,14 +42,15 @@ abstract class UpdateDoctorDetailsService {
       await ApiServices.post(
         endPoint: 'updateDoctor',
         body: {
-          'user_id': "${doctorModel.user.id}",
+          'id': "${doctorModel.id}",
           'first_name': doctorModel.user.firstName,
           'last_name': doctorModel.user.lastName,
+          'email': doctorModel.user.email,
           'specialty': doctorModel.specialty,
-          'department_id': "${doctorModel.departmentID}",
           'consultation_price': "${doctorModel.consultationPrice}",
           'phone_num': doctorModel.user.phoneNum,
           'department_name': deparmentName,
+          'description': doctorModel.description,
         },
         token: CacheHelper.getData(key: 'Token'),
       );

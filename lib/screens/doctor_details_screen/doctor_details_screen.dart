@@ -120,8 +120,7 @@ class _Body extends StatelessWidget {
           return DoctorsView(token: CacheHelper.getData(key: 'Token'));
         } else {
           return RefreshIndicator(
-            onRefresh: () =>
-                cubit.storeDoctorWorkDays(doctorID: doctorModel.id),
+            onRefresh: () => cubit.refreshDoctor(doctorModel: doctorModel),
             child: ListView(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
