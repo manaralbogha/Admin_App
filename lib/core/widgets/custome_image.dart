@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:med_manage_app/constant.dart';
 import '../styles/colors/colors.dart';
 
 class CustomeImage extends StatelessWidget {
@@ -76,8 +77,7 @@ class CustomeNetworkImage extends StatelessWidget {
         image: imageUrl != null
             ? DecorationImage(
                 fit: fit ?? BoxFit.scaleDown,
-                image:
-                    NetworkImage('http://192.168.43.37:8000/upload/$imageUrl'),
+                image: NetworkImage('http://$ipAddress:8000/upload/$imageUrl'),
               )
             : null,
       ),

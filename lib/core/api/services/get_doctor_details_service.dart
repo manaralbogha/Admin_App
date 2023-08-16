@@ -3,9 +3,9 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:project_one_admin_app/core/api/http_api_services.dart';
 import '../../errors/failures.dart';
 import '../../models/doctor_model.dart';
+import '../http_api_services.dart';
 
 abstract class GetDoctorDetailsService {
   static Future<Either<Failure, DoctorModel>> getDoctorDetails(

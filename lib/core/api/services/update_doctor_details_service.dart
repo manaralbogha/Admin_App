@@ -1,14 +1,16 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:project_one_admin_app/core/api/http_api_services.dart';
-import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
-import 'package:project_one_admin_app/core/models/doctor_model.dart';
 import '../../errors/failures.dart';
+import '../../models/doctor_model.dart';
+import '../http_api_services.dart';
 
 abstract class UpdateDoctorDetailsService {
-  static Future<Either<Failure, void>> updateWithImage(
-      {required DoctorModel doctorModel, required String deparmentName}) async {
+  static Future<Either<Failure, void>> updateWithImage({
+    required DoctorModel doctorModel,
+    required String deparmentName,
+    required String token,
+  }) async {
     try {
       ApiServices.postWithImage(
         endPoint: 'updateDoctor',
@@ -24,11 +26,12 @@ abstract class UpdateDoctorDetailsService {
           'description': doctorModel.description,
         },
         imagePath: doctorModel.imagePath,
-        token: CacheHelper.getData(key: 'Token'),
+        token: token,
       );
       return right(null);
     } catch (ex) {
       log('Exception: there is an error in updateWithImage method');
+      log('xxx ${ex.toString()} xxx');
       if (ex is DioException) {
         return left(ServerFailure.fromDioError(ex));
       }
@@ -36,8 +39,11 @@ abstract class UpdateDoctorDetailsService {
     }
   }
 
-  static Future<Either<Failure, void>> updateDoctorDetails(
-      {required DoctorModel doctorModel, required String deparmentName}) async {
+  static Future<Either<Failure, void>> updateDoctorDetails({
+    required DoctorModel doctorModel,
+    required String deparmentName,
+    required String token,
+  }) async {
     try {
       await ApiServices.post(
         endPoint: 'updateDoctor',
@@ -52,13 +58,13 @@ abstract class UpdateDoctorDetailsService {
           'department_name': deparmentName,
           'description': doctorModel.description,
         },
-        token: CacheHelper.getData(key: 'Token'),
+        token: token,
       );
 
       return right(null);
     } catch (ex) {
       log('Exception: there is an error in updateDoctorDetails method');
-      log(ex.toString());
+      log('xxx ${ex.toString()} xxx');
       if (ex is DioException) {
         return left(ServerFailure.fromDioError(ex));
       }

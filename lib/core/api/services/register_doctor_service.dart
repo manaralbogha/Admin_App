@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:project_one_admin_app/core/api/http_api_services.dart';
-import 'package:project_one_admin_app/core/models/register_doctor_model.dart';
 import '../../errors/failures.dart';
+import '../../models/register_doctor_model.dart';
+import '../http_api_services.dart';
 
 abstract class RegisterDoctorService {
   static Future<Either<Failure, RegisterDoctorResponse>> registerDoctor({

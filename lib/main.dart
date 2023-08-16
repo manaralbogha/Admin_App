@@ -1,62 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:project_one_admin_app/core/api/services/local/cache_helper.dart';
-import 'package:project_one_admin_app/core/styles/colors/colors.dart';
-import 'package:project_one_admin_app/screens/doctor_details_screen/doctor_details_screen.dart';
-import 'package:project_one_admin_app/screens/doctors_screen/doctors_screen.dart';
-import 'package:project_one_admin_app/screens/login_screen/login_screen.dart';
-import 'package:project_one_admin_app/screens/register_doctor_screen/register_doctor_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:med_manage_app/core/utils/app_router.dart';
+import 'package:med_manage_app/modules/doctors_screen/doctors_screen.dart';
+import 'package:med_manage_app/styles/themes/themes.dart';
+import 'core/api/services/local/cache_helper.dart';
+import 'cubit/bloc_ob_server.dart';
+import 'cubit/cubit.dart';
+import 'helper/dio_helper.dart';
+
+late Size screenSize;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
-  runApp(const AdminApp());
+  Bloc.observer = MyBlocObserver();
+  DioHelper.init();
+  DioHelperG.init();
+
+  // await CacheHelper.init();
+  //token = CacheHelper.getData(key :'token');
+  runApp(const MedManageApp());
 }
 
-late Size screenSize;
-
-class AdminApp extends StatelessWidget {
-  const AdminApp({super.key});
+class MedManageApp extends StatelessWidget {
+  const MedManageApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
-    return ScreenUtilInit(
-      builder: (context, child) {
-        return MaterialApp(
-          initialRoute: CacheHelper.getData(key: 'Token') == null
-              ? LoginView.route
-              : DoctorsView.route,
-          routes: {
-            LoginView.route: (context) => const LoginView(),
-            DoctorDetailsView.route: (context) => const DoctorDetailsView(),
-            RegisterDoctorView.route: (context) => const RegisterDoctorView(),
-            DoctorsView.route: (context) =>
-                DoctorsView(token: CacheHelper.getData(key: 'Token')),
-          },
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            useMaterial3: true,
-            floatingActionButtonTheme: const FloatingActionButtonThemeData(
-              shape: CircleBorder(),
-              foregroundColor: Colors.white,
-            ),
-            appBarTheme: AppBarTheme(
-              iconTheme: const IconThemeData(color: Colors.white),
-              actionsIconTheme: const IconThemeData(color: Colors.white),
-              titleTextStyle:
-                  const TextStyle(color: Colors.white, fontSize: 25),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(22.r),
-                ),
-              ),
-              color: defaultColor,
-              centerTitle: true,
-            ),
-          ),
-        );
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (BuildContext context) => MedManageCubit()..getHomeDepData(),
+        ),
+      ],
+      child: ScreenUtilInit(
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+
+            theme: lightTheme, //light
+
+            darkTheme: darkTheme, //dark
+
+            //themeMode: MedManageCubit.get(context).isDark? ThemeMode.dark : ThemeMode.light, //change between dark & light
+
+            themeMode: ThemeMode.light,
+
+            home: DoctorsView(token: CacheHelper.getData(key: 'Token')),
+            // CacheHelper.getData(key: 'Token') == null
+            //     ? const LoginView()
+            //     : const MedManageLayout(),
+            routes: AppRouter.router,
+          );
+        },
+      ),
     );
   }
 }
+
+// class HomeView extends StatelessWidget {
+//   const HomeView({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Scaffold();
+//   }
+// }
+
+

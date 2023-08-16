@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project_one_admin_app/core/models/doctor_model.dart';
-import 'package:project_one_admin_app/core/styles/colors/colors.dart';
-import 'package:project_one_admin_app/main.dart';
 import '../../../../../core/utils/app_assets.dart';
+import '../../main.dart';
+import '../../styles/colors/colors.dart';
+import '../models/doctor_model.dart';
 import 'custome_text_info.dart';
 
 class CustomeListViewItem extends StatelessWidget {

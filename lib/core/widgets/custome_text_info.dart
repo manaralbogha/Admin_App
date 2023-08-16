@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_one_admin_app/core/styles/text_styles.dart';
-
 import '../styles/colors/colors.dart';
+import '../styles/text_styles.dart';
 
 class CustomeTextInfo extends StatelessWidget {
   final String text;
