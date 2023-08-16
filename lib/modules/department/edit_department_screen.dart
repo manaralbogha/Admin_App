@@ -95,7 +95,8 @@ class EditDepartmentScreen extends StatelessWidget {
                                         ? NetworkImage(
                                             'http://$ipAddress:8000/upload/${model!.Department![index].img}',
                                             scale: 10.0)
-                                        : FileImage(departmentImage)
+                                        : departmentImage
+                                            // : FileImage(departmentImage)
                                             as ImageProvider,
                                     width: double.infinity,
                                     height: 170.0,

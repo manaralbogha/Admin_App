@@ -98,7 +98,7 @@ class LoginViewBody extends StatelessWidget {
                 },
                 icon: Icon(
                   loginCubit.icon,
-                  color: defaultColor,
+                  color: defaultColor2,
                 ),
               ),
             ),

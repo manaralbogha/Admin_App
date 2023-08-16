@@ -18,34 +18,8 @@ class DoctorsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => DoctorCubit()..getDoctors(token: token),
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Doctors'),
-          actions: [
-            InkWell(
-              onTap: () {},
-              child: const Icon(Icons.logout, size: 25),
-            ),
-            const SizedBox(width: 10),
-          ],
-        ),
-        body: DoctorsViewBody(token: token),
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'heroTag1',
-          onPressed: () {
-            Navigator.pushNamed(
-              context,
-              RegisterDoctorView.route,
-              arguments: token,
-            );
-          },
-          backgroundColor: defaultColor,
-          child: const Icon(Icons.add, size: 40),
-        ),
-      ),
+    return DoctorsViewBody(
+      token: token,
     );
   }
 }
@@ -56,19 +30,22 @@ class DoctorsViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DoctorCubit, DoctorsStates>(
-      builder: (context, state) {
-        if (state is DoctorsFailure) {
-          return CustomeErrorWidget(errorMsg: state.failureMsg);
-        } else if (state is DoctorsSuccess) {
-          return _Body(
-            state: state,
-            doctorCubit: BlocProvider.of<DoctorCubit>(context),
-          );
-        } else {
-          return const CustomeProgressIndicator();
-        }
-      },
+    return BlocProvider(
+      create: (context) => DoctorCubit()..getDoctors(token: token),
+      child: BlocBuilder<DoctorCubit, DoctorsStates>(
+        builder: (context, state) {
+          if (state is DoctorsFailure) {
+            return CustomeErrorWidget(errorMsg: state.failureMsg);
+          } else if (state is DoctorsSuccess) {
+            return _Body(
+              state: state,
+              doctorCubit: BlocProvider.of<DoctorCubit>(context),
+            );
+          } else {
+            return const CustomeProgressIndicator();
+          }
+        },
+      ),
     );
   }
 }

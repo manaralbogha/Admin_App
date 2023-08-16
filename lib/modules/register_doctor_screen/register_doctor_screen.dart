@@ -138,7 +138,7 @@ class RegisterDoctorViewBody extends StatelessWidget {
                         },
                         icon: Icon(
                           cubit.icon,
-                          color: defaultColor,
+                          color: defaultColor2,
                         ),
                       ),
                     ),
@@ -177,7 +177,7 @@ class RegisterDoctorViewBody extends StatelessWidget {
                       suffixIcon: const Icon(
                         Icons.expand_more_sharp,
                         size: 40,
-                        color: defaultColor,
+                        color: defaultColor2,
                       ),
                       validator: (value) {
                         if (cubit.specialty == null) {
@@ -233,7 +233,7 @@ class RegisterDoctorViewBody extends StatelessWidget {
                       suffixIcon: const Icon(
                         Icons.expand_more_sharp,
                         size: 40,
-                        color: defaultColor,
+                        color: defaultColor2,
                       ),
                       validator: (value) {
                         if (cubit.specialty == null) {

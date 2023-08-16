@@ -10,13 +10,10 @@ class PatientsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MedManageCubit,MedManageStates>(
-      listener: (context, state) {
-
-      },
+    return BlocConsumer<MedManageCubit, MedManageStates>(
+      listener: (context, state) {},
       builder: (context, state) {
-        if(state is MedManageErrorPatientsListState)
-        {
+        if (state is MedManageErrorPatientsListState) {
           return const Center(
             child: Text(
               'There is some thing error',
@@ -25,13 +22,14 @@ class PatientsScreen extends StatelessWidget {
               ),
             ),
           );
-        }if(state is MedManageLoadingPatientsListState)
-        {
+        }
+        if (state is MedManageLoadingPatientsListState) {
           return const Center(child: CircularProgressIndicator());
-        }else
-        {
-          return Scaffold(
-            body: PatientsListViewItem(context,profImage: 'assets/images/default_photo.jpg', model: MedManageCubit.get(context).indexPatientModel,),
+        } else {
+          return PatientsListViewItem(
+            context,
+            profImage: 'assets/images/default_photo.jpg',
+            model: MedManageCubit.get(context).indexPatientModel,
           );
         }
       },

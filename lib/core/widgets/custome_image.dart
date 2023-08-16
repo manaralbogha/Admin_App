@@ -39,7 +39,7 @@ class CustomeImage extends StatelessWidget {
           : Icon(
               Icons.person,
               size: iconSize ?? 35.sp,
-              color: defaultColor,
+              color: defaultColor2,
             ),
     );
   }
@@ -86,7 +86,7 @@ class CustomeNetworkImage extends StatelessWidget {
           : Icon(
               Icons.person,
               size: iconSize ?? 35.sp,
-              color: defaultColor,
+              color: defaultColor2,
             ),
     );
   }

@@ -50,7 +50,7 @@ class DoctorDetailsView extends StatelessWidget {
           builder: (context, state) {
             return FloatingActionButton(
               heroTag: 'heroTag2',
-              backgroundColor: defaultColor,
+              backgroundColor: defaultColor2,
               onPressed: () {
                 EditDoctorInfoBottomSheet.editDoctorInfoBottomSheet(
                   context,
@@ -58,7 +58,10 @@ class DoctorDetailsView extends StatelessWidget {
                   cubit: BlocProvider.of<DoctorDetailsCubit>(context),
                 );
               },
-              child: const Icon(Icons.edit),
+              child: const Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
             );
           },
         ),

@@ -45,7 +45,7 @@ class CustomeTextField extends StatelessWidget {
         ),
         const SizedBox(width: 20),
         SizedBox(
-          width: 270.w,
+          width: 260.w,
           child: TextFormField(
             validator: validator ??
                 (value) {
@@ -61,12 +61,12 @@ class CustomeTextField extends StatelessWidget {
             keyboardType: keyboardType,
             textCapitalization: textCapitalization,
             onChanged: onChanged,
-            cursorColor: defaultColor,
+            cursorColor: defaultColor2,
             decoration: InputDecoration(
               contentPadding: contentPadding,
               hintText: hintText,
               hintStyle: hintStyle ??
-                  TextStyle(fontSize: 20, color: defaultColor.withOpacity(.6)),
+                  TextStyle(fontSize: 20, color: defaultColor2.withOpacity(.6)),
               suffixIcon: suffixIcon,
               focusedBorder: getBorder(),
             ),
@@ -80,7 +80,7 @@ class CustomeTextField extends StatelessWidget {
     return UnderlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: const BorderSide(
-        color: defaultColor,
+        color: defaultColor2,
       ),
     );
   }
@@ -146,12 +146,12 @@ class CustomeDescriptionTextField extends StatelessWidget {
             minLines: 1,
             keyboardType: keyboardType,
             onChanged: onChanged,
-            cursorColor: defaultColor,
+            cursorColor: defaultColor2,
             decoration: InputDecoration(
               contentPadding: contentPadding,
               hintText: hintText,
               hintStyle: hintStyle ??
-                  TextStyle(fontSize: 20, color: defaultColor.withOpacity(.6)),
+                  TextStyle(fontSize: 20, color: defaultColor2.withOpacity(.6)),
               suffixIcon: suffixIcon,
               focusedBorder: getBorder(),
             ),
@@ -165,7 +165,7 @@ class CustomeDescriptionTextField extends StatelessWidget {
     return UnderlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: const BorderSide(
-        color: defaultColor,
+        color: defaultColor2,
       ),
     );
   }

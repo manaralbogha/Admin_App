@@ -335,12 +335,12 @@ class _CustomeTextFieldState extends State<_CustomeTextField> {
                   ? const Icon(
                       Icons.expand_more_sharp,
                       size: 40,
-                      color: defaultColor,
+                      color: defaultColor2,
                     )
                   : const Icon(
                       Icons.close,
                       size: 30,
-                      color: defaultColor,
+                      color: defaultColor2,
                       // :
                     ),
             ),

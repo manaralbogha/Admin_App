@@ -26,7 +26,7 @@ ThemeData darkTheme = ThemeData(
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: HexColor('333739'),
     type: BottomNavigationBarType.fixed,
-    selectedItemColor: defaultColor,
+    selectedItemColor: defaultColor2,
     unselectedItemColor: Colors.grey,
     elevation: 20.0,
   ),
@@ -52,7 +52,7 @@ ThemeData lightTheme = ThemeData(
       statusBarIconBrightness: Brightness.dark,
     ),
     titleTextStyle: const TextStyle(
-        color: defaultColor, fontSize: 18.0, fontWeight: FontWeight.w500),
+        color: defaultColor2, fontSize: 18.0, fontWeight: FontWeight.w500),
     iconTheme: IconThemeData(
       color: Colors.grey[600],
     ),
@@ -64,7 +64,7 @@ ThemeData lightTheme = ThemeData(
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
-    selectedItemColor: defaultColor,
+    selectedItemColor: defaultColor2,
     unselectedItemColor: Colors.grey[600],
     elevation: 20.0,
   ),
