@@ -66,7 +66,7 @@ class _PickImageWidgetState extends State<PickImageWidget> {
               _showBottomSheet(context);
             },
             shape: const CircleBorder(),
-            color: defaultColor,
+            color: defaultColor2,
             child: Icon(
               widget.image != null
                   ? Icons.edit

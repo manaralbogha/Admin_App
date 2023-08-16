@@ -16,7 +16,7 @@ class CustomeIcon extends StatelessWidget {
       child: Icon(
         icon,
         size: size == null ? 30.0 : (size! * (2 / 3)),
-        color: defaultColor,
+        color: defaultColor2,
       ),
     );
   }

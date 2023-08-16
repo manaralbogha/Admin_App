@@ -15,7 +15,7 @@ class CustomeTextInfo extends StatelessWidget {
         // CustomeIcon(icon: iconData),
         Icon(
           iconData,
-          color: defaultColor,
+          color: defaultColor2,
           size: 30,
         ),
         const SizedBox(width: 5),

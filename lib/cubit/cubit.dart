@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:awesome_icons/awesome_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:med_manage_app/core/api/services/local/cache_helper.dart';
 import 'package:med_manage_app/cubit/states.dart';
 import 'package:med_manage_app/helper/dio_helper.dart';
 import 'package:med_manage_app/models/department/add_department_model.dart';
+import 'package:med_manage_app/modules/doctors_screen/doctors_screen.dart';
 import '../constant.dart';
 import '../helper/end_points.dart';
 import '../models/department/delete_department_model.dart';
@@ -31,7 +33,7 @@ class MedManageCubit extends Cubit<MedManageStates> {
   static MedManageCubit get(context) => BlocProvider.of(context);
   static String tokenOfAdmin = CacheHelper.getData(key: 'Token');
   // 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZmY0ZWMxZThhZDljNmY4ZmVmYzNlYzgxOWIxZjQ2OTM3NWI4OWQ1ZTc1NmJlYjBlZTNlNmM1Zjg3OTQ5NjhhMjc5MDE0YzQ5MTY5ZjkxYjEiLCJpYXQiOjE2OTE0NzM1MzYuNTc0ODI1LCJuYmYiOjE2OTE0NzM1MzYuNTc0ODMsImV4cCI6MTcyMzA5NTkzNi41NTc4OTUsInN1YiI6IjEiLCJzY29wZXMiOltdfQ.xoJ-WhdrIJVGrWYmU7PlHbuC6sGs59LWw3vuwD-ywlS-xX2U2pDV27zNy1bLinaAk771W9wFyKFG4fACmmdsXfr3oshVrdWI7Rs4tfpHmtR5lAQ6aohIQJg9qeeWEUOWzWcI9R9L2Kv_q6UWV_eGyne2_zJCy728rMP2k3Vw_UYdv4SgfJhErmfia9MNJzb3d48SZRYyqGFIB61uXLG33trOCYOvO_oKnyxpGls5mNZ0Ep6I-3yYPFwlM9YDcX4BTVWVvx1c8Tje6cbLBdXy_MaQAsf8SHdra7XEK6Zb8TJhLjnwuEwbQL8RBNtxi_PPIG0hYDaczUKZXaO3iDmvwQKTnqMZsYI9H1SddXuJOJgnc9Ppzl-4NXLxJTWjwYjVuQxne3t0DAqNaZoC_0E5ut8K5HZ0pd3A4UyOZL2E0gojkMQXaoY9YKfueCQlhTHZ3aYT7Gawgc_2_X9ujGNQNsDa-1rvQSJLE40-1xwITVTS5pq-Tm945rHZibhWxfq0Wt0sZ4kpmS9RULTt3hKpbgDfgQSqroXBMFkWINSQ1_FF4aLTjc1_mxADp1qOauYDPY34zdGB0UhCzatPdMNVWu7nG_paMcmQIKVMdg2JkKyH4jMVV40rAB9yqLjeyVKe9z3u0v58XxLJGg9uvk7bdB_XoFTz4JDp7gHBadJqLgA';
-  static String baseUrl = 'http://192.168.43.189:8000/api/';
+  static String baseUrl = baseURL;
 
   int currentIndex = 0;
   static int index = 0;
@@ -42,7 +44,7 @@ class MedManageCubit extends Cubit<MedManageStates> {
     ),
     const PatientsScreen(),
     const SecretariaScreen(),
-    const SettingsScreen()
+    DoctorsView(token: CacheHelper.getData(key: 'Token')),
   ];
 
   List<BottomNavigationBarItem> items = [
@@ -69,10 +71,10 @@ class MedManageCubit extends Cubit<MedManageStates> {
     ),
     const BottomNavigationBarItem(
       icon: Icon(
-        Icons.settings,
+        FontAwesomeIcons.stethoscope,
         size: 25.0,
       ),
-      label: 'Settings',
+      label: 'Doctors',
     ),
   ];
 

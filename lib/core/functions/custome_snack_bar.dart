@@ -8,7 +8,7 @@ abstract class CustomeSnackBar {
     BuildContext context, {
     required String msg,
     Duration? duration,
-    Color? color = defaultColor,
+    Color? color = defaultColor2,
     double? fontSize,
     bool hasAction = false,
   }) {

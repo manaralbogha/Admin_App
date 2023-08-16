@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:med_manage_app/core/models/user_model.dart';
 import '../../../../core/models/doctor_model.dart';
 import '../../../core/widgets/custome_button.dart';
 import '../../../core/widgets/custome_text_field.dart';
@@ -97,20 +98,28 @@ abstract class EditDoctorInfoBottomSheet {
                       } else if (formKey.currentState!.validate() &&
                           (change || cubit.doctorImage != null)) {
                         Navigator.pop(context);
+                        User updateUser = User(
+                          id: doctorModel.user.id,
+                          firstName: doctorModel.user.firstName,
+                          lastName: doctorModel.user.lastName,
+                          phoneNum: cubit.phoneNum ?? doctorModel.user.phoneNum,
+                          email: doctorModel.user.email,
+                          role: doctorModel.user.role,
+                        );
                         DoctorModel update = DoctorModel(
-                            id: doctorModel.id,
-                            specialty: doctorModel.specialty,
-                            description:
-                                cubit.description ?? doctorModel.description,
-                            imagePath:
-                                cubit.doctorImage ?? doctorModel.imagePath,
-                            departmentID: doctorModel.departmentID,
-                            consultationPrice: cubit.consultationPrice == null
-                                ? doctorModel.consultationPrice
-                                : int.parse(cubit.consultationPrice!),
-                            review: doctorModel.review,
-                            userID: doctorModel.userID,
-                            user: doctorModel.user);
+                          id: doctorModel.id,
+                          specialty: doctorModel.specialty,
+                          description:
+                              cubit.description ?? doctorModel.description,
+                          imagePath: cubit.doctorImage ?? doctorModel.imagePath,
+                          departmentID: doctorModel.departmentID,
+                          consultationPrice: cubit.consultationPrice == null
+                              ? doctorModel.consultationPrice
+                              : int.parse(cubit.consultationPrice!),
+                          review: doctorModel.review,
+                          userID: doctorModel.userID,
+                          user: updateUser,
+                        );
 
                         await cubit.updateDoctorDetails(context,
                             doctorModel: update);

@@ -18,7 +18,7 @@ packages:
     source: hosted
     version: "1.1.0"
   bloc:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: bloc
       sha256: "3820f15f502372d979121de1f6b97bfcf1630ebff8fe1d52fb2b0bfa49be5b49"
@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.1"
+  conditional_builder_null_safety:
+    dependency: "direct main"
+    description:
+      name: conditional_builder_null_safety
+      sha256: "4428f40c20e222acead5e424fb9fba261733fc9da06ef58a08d9477207b0adfd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   cross_file:
     dependency: transitive
     description:
@@ -121,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      sha256: b1729fc96627dd44012d0a901558177418818d6bd428df59dcfeb594e5f66432
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.3.2"
   file_selector_linux:
     dependency: transitive
     description:
@@ -296,6 +296,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.1"
   js:
     dependency: transitive
     description:
@@ -352,14 +360,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  modal_progress_hud_nsn:
-    dependency: "direct main"
-    description:
-      name: modal_progress_hud_nsn
-      sha256: "0b0d95e5ce3e1884390624fbe79fcf90d7de10abe05d26c0e276c25e7130e3e0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
   nested:
     dependency: transitive
     description:

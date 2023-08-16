@@ -13,23 +13,21 @@ class SecretariaScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MedManageCubit,MedManageStates>(
-      listener: (context, state) {
-
-      },
+    return BlocConsumer<MedManageCubit, MedManageStates>(
+      listener: (context, state) {},
       builder: (context, state) {
-        if(state is MedManageErrorSecretariaListState)
-        {
+        if (state is MedManageErrorSecretariaListState) {
           return Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-            floatingActionButton: FloatingActionButton (
-              onPressed: ()
-              {
+            // floatingActionButtonLocation:
+            //     FloatingActionButtonLocation.miniEndFloat,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
                 navigateAndReplacement(context, RegisterSecretaria());
               },
-              child:const Icon(
+              child: const Icon(
                 Icons.add,
-                color: defaultColor,),
+                size: 40,
+              ),
             ),
             body: const Center(
               child: Text(
@@ -40,23 +38,14 @@ class SecretariaScreen extends StatelessWidget {
               ),
             ),
           );
-        }if(state is MedManageLoadingSecretariaListState)
-        {
+        }
+        if (state is MedManageLoadingSecretariaListState) {
           return const Center(child: CircularProgressIndicator());
-        }else
-        {
-          return Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-            floatingActionButton: FloatingActionButton (
-              onPressed: ()
-              {
-                navigateAndReplacement(context, RegisterSecretaria());
-              },
-              child:const Icon(
-                Icons.add,
-                color: defaultColor,),
-            ),
-            body: SecretariaListViewItem(context,profImage: 'assets/images/default_photo.jpg', model: MedManageCubit.get(context).indexSecretariaModel,),
+        } else {
+          return SecretariaListViewItem(
+            context,
+            profImage: 'assets/images/default_photo.jpg',
+            model: MedManageCubit.get(context).indexSecretariaModel,
           );
         }
       },
