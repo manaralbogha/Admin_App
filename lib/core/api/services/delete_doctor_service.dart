@@ -1,20 +1,20 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:project_one_admin_app/core/api/http_api_services.dart';
 import '../../errors/failures.dart';
-import '../../models/message_model.dart';
+import '../http_api_services.dart';
 
 abstract class DeleteDoctorService {
-  static Future<Either<Failure, MessageModel>> deleteDoctor(
-      {required String token, required int userID}) async {
+  static Future<Either<Failure, void>> deleteDoctor(
+      {required String token, required int doctorID}) async {
     try {
-      var data = await ApiServices.post(
-          endPoint: 'deleteDoctor', body: {'user_id': '$userID'}, token: token);
+      await ApiServices.post(
+          endPoint: 'deleteDoctor', body: {'id': '$doctorID'}, token: token);
 
-      return right(MessageModel.fromJson(data));
+      return right(null);
     } catch (ex) {
       log('Exception: there is an error in deleteDoctor method');
+      log(ex.toString());
       if (ex is DioException) {
         return left(ServerFailure.fromDioError(ex));
       }

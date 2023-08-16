@@ -3,8 +3,8 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:project_one_admin_app/core/api/http_api_services.dart';
 import '../../errors/failures.dart';
+import '../http_api_services.dart';
 
 abstract class LoginService {
   static Future<Either<Failure, LoginModel>> login({

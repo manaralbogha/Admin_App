@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project_one_admin_app/core/styles/colors/colors.dart';
+import '../../styles/colors/colors.dart';
 
 abstract class TextStyles {
   static TextStyle textStyle16 =

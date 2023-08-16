@@ -1,4 +1,4 @@
-import 'package:project_one_admin_app/core/models/user_model.dart';
+import 'package:med_manage_app/core/models/user_model.dart';
 
 class DoctorModel {
   final int id;

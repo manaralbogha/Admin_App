@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project_one_admin_app/core/styles/text_styles.dart';
-import 'package:project_one_admin_app/main.dart';
+import '../../main.dart';
+import '../styles/text_styles.dart';
 
 abstract class CustomeDialogs {
   // static showSpecialityDialog(BuildContext context) {
